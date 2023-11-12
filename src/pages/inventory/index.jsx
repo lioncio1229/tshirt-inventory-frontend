@@ -5,11 +5,13 @@ import Menu from "./Menu";
 import DataTable from "../../components/DataTable";
 import { useGetShirtsQuery } from "../../services/tshirtManagementService";
 import { Delete, Edit } from "@mui/icons-material";
+import {useNavigate} from "react-router-dom";
 
 export default function Inventory() {
   const [pageIndex, setPageIndex] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const { data, refetch } = useGetShirtsQuery({ pageIndex: pageIndex * rowsPerPage, rowsPerPage });
+  const navigate = useNavigate();
 
   const columns = [
     { id: "name", label: "Name" },
@@ -23,7 +25,7 @@ export default function Inventory() {
 
   const menus = [
     {label: "Edit", icon: <Edit color="primary"/>, onClick : (id) => {
-      console.log("Edit product: " + id);
+      navigate(`edit-product/${id}`);
     }},
     {label: "Delete", icon: <Delete color="error"/>, onClick : (id) => {
       console.log("Delete product");

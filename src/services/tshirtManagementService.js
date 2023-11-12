@@ -6,11 +6,21 @@ const tshirtManagementApi = emptySplitApi.injectEndpoints({
         getShirts: builder.query({
             query: (model) => `api/v1/tshirt/q?skipRows=${model.pageIndex}&numberOfItems=${model.rowsPerPage}`
         }),
+        getShirt: builder.query({
+            query: (model) => `api/v1/tshirt/${model.id}`
+        }),
         addShirt: builder.mutation({
             query: (model) => ({
                 url: "api/v1/tshirt",
                 method: "POST",
                 body: model,
+            })
+        }),
+        editShirt: builder.mutation({
+            query: (payload) => ({
+                url: `api/v1/tshirt/${payload.id}`,
+                method: "PUT",
+                body: payload.model,
             })
         })
     })
@@ -18,5 +28,7 @@ const tshirtManagementApi = emptySplitApi.injectEndpoints({
 
 export const {
     useGetShirtsQuery,
+    useGetShirtQuery,
     useAddShirtMutation,
+    useEditShirtMutation,
 } = tshirtManagementApi;

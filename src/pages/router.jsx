@@ -4,6 +4,7 @@ import Authentication from "../layouts/Authentication";
 import Header from "../layouts/Header";
 import Inventory from "./inventory";
 import AddProduct from "./AddProduct";
+import EditProduct from "./EditProduct";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "add-product",
         element: <AddProduct />
+      },
+      {
+        path: "edit-product/:id",
+        element: <EditProduct />
       },
     ]
   }
