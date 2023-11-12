@@ -7,7 +7,7 @@ export default function Inventory()
         <Box>
             <Grid container>
                 <Grid item xs={12}>
-                    <Overview overviews={[{label: "Total T-shirt", value: 100}, {label: "Total Categories", value: 3}]} />
+                    <Overview overviews={[{label: "Total T-shirt", value: 100, sx: {bgcolor: "#f07b53"}}, {label: "Total Categories", value: 3, sx: {bgcolor: "#f4b168"}}]} />
                 </Grid>
             </Grid>
         </Box>

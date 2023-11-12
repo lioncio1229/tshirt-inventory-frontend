@@ -7,7 +7,7 @@ export default function Overview({overviews=[]})
         <Stack gap={2} flexDirection="row">
             {
                 overviews.map((item, i) => 
-                    <StatCard key={i} label={item.label} value={item.value} />    
+                    <StatCard key={i} label={item.label} value={item.value} sx={item.sx} />    
                 )
             }
         </Stack>
