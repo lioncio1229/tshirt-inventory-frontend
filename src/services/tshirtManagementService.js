@@ -4,7 +4,7 @@ const tshirtManagementApi = emptySplitApi.injectEndpoints({
     overrideExisting: false,
     endpoints: (builder) => ({
         getShirts: builder.query({
-            query: () => "api/v1/tshirt"
+            query: (model) => `api/v1/tshirt/q?skipRows=${model.pageIndex}&numberOfItems=${model.rowsPerPage}`
         }),
     })
 });

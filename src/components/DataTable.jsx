@@ -15,6 +15,7 @@ export default function DataTable({
   rowsPerPage,
   onPageChange,
   onRowsPerPageChange,
+  total,
 }) {
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -54,9 +55,9 @@ export default function DataTable({
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
+        rowsPerPageOptions={[10, 20, 50, 100]}
         component="div"
-        count={rows ? rows.length : 0}
+        count={total}
         rowsPerPage={rowsPerPage}
         page={pageIndex}
         onPageChange={onPageChange}
