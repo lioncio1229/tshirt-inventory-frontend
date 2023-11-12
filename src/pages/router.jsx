@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { Registration, Login } from "./auth";
 import Authentication from "../layouts/Authentication";
 import Header from "../layouts/Header";
+import Inventory from "./inventory";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,13 @@ const router = createBrowserRouter([
   },
   {
     path: "/main",
-    element: <Header />
+    element: <Header />,
+    children: [
+      {
+        path: "inventory",
+        element: <Inventory />
+      }
+    ]
   }
 ]);
 
