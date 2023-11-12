@@ -3,6 +3,7 @@ import { Registration, Login } from "./auth";
 import Authentication from "../layouts/Authentication";
 import Header from "../layouts/Header";
 import Inventory from "./inventory";
+import AddProduct from "./AddProduct";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,11 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Inventory />
-      }
+      },
+      {
+        path: "add-product",
+        element: <AddProduct />
+      },
     ]
   }
 ]);
