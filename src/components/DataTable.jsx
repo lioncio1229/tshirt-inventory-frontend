@@ -7,7 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { IconButton, Menu, MenuItem, Stack } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
 
 export default function DataTable({
@@ -99,7 +99,12 @@ export default function DataTable({
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
           {
             menus.map((menu, i) => (
-              <MenuItem key={i} onClick={() => handleClose(menu)}>{menu.label}</MenuItem>
+              <MenuItem key={i} onClick={() => handleClose(menu)} sx={{minWidth: 150}}>
+                <Stack direction="row" gap={2}>
+                  {menu.icon}
+                  {menu.label}
+                </Stack>
+              </MenuItem>
             ))
           }
         </Menu>

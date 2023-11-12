@@ -4,6 +4,7 @@ import Overview from "../../components/Overview";
 import Menu from "./Menu";
 import DataTable from "../../components/DataTable";
 import { useGetShirtsQuery } from "../../services/tshirtManagementService";
+import { Delete, Edit } from "@mui/icons-material";
 
 export default function Inventory() {
   const [pageIndex, setPageIndex] = useState(0);
@@ -21,10 +22,10 @@ export default function Inventory() {
   ];
 
   const menus = [
-    {label: "Edit", onClick : (id) => {
+    {label: "Edit", icon: <Edit color="primary"/>, onClick : (id) => {
       console.log("Edit product: " + id);
     }},
-    {label: "Delete", onClick : (id) => {
+    {label: "Delete", icon: <Delete color="error"/>, onClick : (id) => {
       console.log("Delete product");
     }}
   ]
