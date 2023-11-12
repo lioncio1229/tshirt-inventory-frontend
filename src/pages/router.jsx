@@ -28,7 +28,7 @@ const router = createBrowserRouter([
     element: <Header />,
     children: [
       {
-        path: "inventory",
+        path: "",
         element: <Inventory />
       }
     ]
