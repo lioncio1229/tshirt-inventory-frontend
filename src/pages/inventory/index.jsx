@@ -20,6 +20,15 @@ export default function Inventory() {
     { id: "categoryName", label: "Category Name" },
   ];
 
+  const menus = [
+    {label: "Edit", onClick : (id) => {
+      console.log("Edit product: " + id);
+    }},
+    {label: "Delete", onClick : (id) => {
+      console.log("Delete product");
+    }}
+  ]
+
   const handleChangePage = (event, newPage) => {
     setPageIndex(newPage);
   };
@@ -59,6 +68,7 @@ export default function Inventory() {
             data && 
             <DataTable
               columns={columns}
+              menus={menus}
               rows={data.tshirts}
               pageIndex={pageIndex}
               rowsPerPage={rowsPerPage}

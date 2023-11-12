@@ -54,7 +54,7 @@ export default function Header() {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" elevation={1}>
         <Toolbar>
           <Inventory sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
