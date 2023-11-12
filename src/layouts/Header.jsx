@@ -179,11 +179,9 @@ export default function Header() {
           </Box>
         </Toolbar>
       </AppBar>
-      <Toolbar>
-        <Box mt={2}>
-            <Outlet />
-        </Box>
-      </Toolbar>
+      <Box mt={2} ml={3} mr={3}>
+          <Outlet />
+      </Box>
     </>
   );
 }

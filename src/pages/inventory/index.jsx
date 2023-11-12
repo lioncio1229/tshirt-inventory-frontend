@@ -1,10 +1,9 @@
-import { Grid, Box } from "@mui/material";
+import { Grid } from "@mui/material";
 import Overview from "../../components/Overview";
 import Menu from "./Menu";
 
 export default function Inventory() {
   return (
-    <Box>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Overview
@@ -22,10 +21,9 @@ export default function Inventory() {
             ]}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} xl={12}>
             <Menu />
         </Grid>
       </Grid>
-    </Box>
   );
 }
