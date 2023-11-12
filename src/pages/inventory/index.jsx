@@ -20,7 +20,9 @@ export default function Inventory() {
     { id: "color", label: "Color" },
     { id: "unitPrice", label: "Unit Price" },
     { id: "quantityInStock", label: "Quantity in Stock" },
-    { id: "categoryName", label: "Category Name" },
+    { id: "categoryName", label: "Category Name", formatter: (params) => {
+      return params.category.name;
+    }},
   ];
 
   const menus = [
