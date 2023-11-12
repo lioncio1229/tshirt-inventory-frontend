@@ -4,7 +4,7 @@ import Overview from "../../components/Overview";
 export default function Inventory()
 {
     return (
-        <Box mt={2} ml={2} mr={2}>
+        <Box>
             <Grid container>
                 <Grid item xs={12}>
                     <Overview overviews={[{label: "Total T-shirt", value: 100}, {label: "Total Categories", value: 3}]} />
