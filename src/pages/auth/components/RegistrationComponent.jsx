@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 
-export default function Registration() {
+export default function RegistrationComponent() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -25,7 +25,6 @@ export default function Registration() {
         flexDirection: "column",
         alignItems: "center",
       }}
-      maxWidth={400}
     >
       <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
         <LockOutlinedIcon />
