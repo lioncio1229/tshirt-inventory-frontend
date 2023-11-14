@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Registration, Login } from "./auth";
 import Authentication from "../layouts/Authentication";
-import Header from "../layouts/Header";
+import Main from "../layouts/Main";
 import Inventory from "./inventory";
 import AddProduct from "./add_product";
 import EditProduct from "./edit_product";
@@ -30,7 +30,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/main",
-    element: <Header />,
+    element: <Main />,
     children: [
       {
         path: "",
