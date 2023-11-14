@@ -36,12 +36,16 @@ export default function Header({ currentPathName, pages = [], onTabClick }) {
   return (
     <AppBar position="static" elevation={1}>
       <Toolbar>
-        <Inventory sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+        <IconButton href="/main" sx={{ mr: 1 }}>
+          <Inventory
+            sx={{ display: { xs: "none", md: "flex" }, color: "#fff" }}
+          />
+        </IconButton>
         <Typography
           variant="h6"
           noWrap
           component="a"
-          href="#app-bar-with-responsive-menu"
+          href="/main"
           sx={{
             mr: 2,
             display: { xs: "none", md: "flex" },
@@ -52,7 +56,7 @@ export default function Header({ currentPathName, pages = [], onTabClick }) {
             textDecoration: "none",
           }}
         >
-          T-shirt Inventory
+          Tshirt Inventory
         </Typography>
 
         <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -115,7 +119,7 @@ export default function Header({ currentPathName, pages = [], onTabClick }) {
             flexGrow: 1,
             display: { xs: "none", md: "flex" },
             justifyContent: "flex-end",
-            mr: 2
+            mr: 2,
           }}
         >
           {pages.map((page, i) => (
@@ -132,7 +136,7 @@ export default function Header({ currentPathName, pages = [], onTabClick }) {
                         bgcolor: "secondary.main",
                         display: "block",
                         "&:hover": {
-                          bgcolor: "secondary.main"
+                          bgcolor: "secondary.main",
                         },
                         ml: 2,
                       }}
