@@ -3,8 +3,8 @@ import { Registration, Login } from "./auth";
 import Authentication from "../layouts/Authentication";
 import Header from "../layouts/Header";
 import Inventory from "./inventory";
-import AddProduct from "./AddProduct";
-import EditProduct from "./EditProduct";
+import AddProduct from "./add-product";
+import EditProduct from "./edit-product";
 import ManageUsers from "./manage_users";
 
 const router = createBrowserRouter([
