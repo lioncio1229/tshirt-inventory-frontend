@@ -5,6 +5,7 @@ import Header from "../layouts/Header";
 import Inventory from "./inventory";
 import AddProduct from "./AddProduct";
 import EditProduct from "./EditProduct";
+import ManageUsers from "./manage_users";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
         path: "edit-product/:id",
         element: <EditProduct />
       },
+      {
+        path: "manage-users",
+        element: <ManageUsers />
+      }
     ]
   }
 ]);
