@@ -3,9 +3,10 @@ import { Registration, Login } from "./auth";
 import Authentication from "../layouts/Authentication";
 import Header from "../layouts/Header";
 import Inventory from "./inventory";
-import AddProduct from "./add-product";
-import EditProduct from "./edit-product";
+import AddProduct from "./add_product";
+import EditProduct from "./edit_product";
 import ManageUsers from "./manage_users";
+import AddUser from "./add_user";
 
 const router = createBrowserRouter([
   {
@@ -45,7 +46,11 @@ const router = createBrowserRouter([
       {
         path: "manage-users",
         element: <ManageUsers />
-      }
+      },
+      {
+        path: "manage-users/add-user",
+        element: <AddUser />
+      },
     ]
   }
 ]);

@@ -5,11 +5,12 @@ import { Edit, Delete } from "@mui/icons-material";
 import { Add } from "@mui/icons-material";
 import { useGetUsersQuery } from "../../services/userManagementService";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function ManageUsers()
 {
     const navigate = useNavigate();
-    const {data} = useGetUsersQuery();
+    const {data, refetch} = useGetUsersQuery();
 
     const columns = [
         { id: "email", label: "Email" },
@@ -26,6 +27,10 @@ export default function ManageUsers()
         }},
     ];
 
+    const handleAddUser = () => {
+        navigate("/main/manage-users/add-user")
+    }
+
     const menus = [
         {label: "Edit", icon: <Edit color="primary"/>, onClick : (id) => {
         //   navigate(`edit-product/${id}`);
@@ -36,6 +41,10 @@ export default function ManageUsers()
         }}
       ]
 
+    useEffect(() => {
+        refetch();
+    }, []);
+
     return (
         <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between">
@@ -44,6 +53,7 @@ export default function ManageUsers()
                     <Button
                         variant="contained"
                         startIcon={<Add />}
+                        onClick={handleAddUser}
                     >
                         Add User
                     </Button>
