@@ -22,7 +22,13 @@ const tshirtManagementApi = emptySplitApi.injectEndpoints({
                 method: "PUT",
                 body: payload.model,
             })
-        })
+        }),
+        deleteShirt: builder.mutation({
+            query: (id) => ({
+                url: `api/v1/tshirt/${id}`,
+                method: "DELETE",
+            }),
+        }),
     })
 });
 
@@ -31,4 +37,5 @@ export const {
     useGetShirtQuery,
     useAddShirtMutation,
     useEditShirtMutation,
+    useDeleteShirtMutation,
 } = tshirtManagementApi;
