@@ -13,6 +13,7 @@ import { MoreVert } from "@mui/icons-material";
 export default function DataTable({
   columns,
   rows,
+  withPagination,
   pageIndex,
   rowsPerPage,
   onPageChange,
@@ -35,15 +36,18 @@ export default function DataTable({
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TablePagination
-        rowsPerPageOptions={[10, 20, 50, 100]}
-        component="div"
-        count={total}
-        rowsPerPage={rowsPerPage}
-        page={pageIndex}
-        onPageChange={onPageChange}
-        onRowsPerPageChange={onRowsPerPageChange}
-      />
+      {
+        withPagination &&
+        <TablePagination
+          rowsPerPageOptions={[10, 20, 50, 100]}
+          component="div"
+          count={total}
+          rowsPerPage={rowsPerPage}
+          page={pageIndex}
+          onPageChange={onPageChange}
+          onRowsPerPageChange={onRowsPerPageChange}
+        />
+      }
       <TableContainer>
         <Table stickyHeader>
           <TableHead>
@@ -85,15 +89,18 @@ export default function DataTable({
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 20, 50, 100]}
-        component="div"
-        count={total}
-        rowsPerPage={rowsPerPage}
-        page={pageIndex}
-        onPageChange={onPageChange}
-        onRowsPerPageChange={onRowsPerPageChange}
-      />
+      {
+        withPagination &&
+        <TablePagination
+          rowsPerPageOptions={[10, 20, 50, 100]}
+          component="div"
+          count={total}
+          rowsPerPage={rowsPerPage}
+          page={pageIndex}
+          onPageChange={onPageChange}
+          onRowsPerPageChange={onRowsPerPageChange}
+        />
+      }
       {
         menus.length > 0 &&
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>

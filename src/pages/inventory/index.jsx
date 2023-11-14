@@ -99,6 +99,7 @@ export default function Inventory() {
               <DataTable
                 columns={columns}
                 menus={menus}
+                withPagination={true}
                 rows={data.tshirts}
                 pageIndex={pageIndex}
                 rowsPerPage={rowsPerPage}
