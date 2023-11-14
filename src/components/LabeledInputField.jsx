@@ -8,6 +8,7 @@ export default function LabeledInputfield({
   value,
   startAdornment,
   endAdornment,
+  disabled,
 }) {
   return (
     <div>
@@ -22,6 +23,7 @@ export default function LabeledInputfield({
             startAdornment,
             endAdornment,
         }}
+        disabled={disabled}
       />
     </div>
   );

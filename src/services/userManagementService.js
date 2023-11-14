@@ -6,11 +6,21 @@ const userManagementApi = emptySplitApi.injectEndpoints({
         getUsers: builder.query({
             query: () => "/api/v1/users"
         }),
+        getUser: builder.query({
+            query: (payload) => `/api/v1/users/${payload.id}`
+        }),
         addUser: builder.mutation({
             query: (model) => ({
                 url: "api/v1/users",
                 method: "POST",
                 body: model,
+            })
+        }),
+        updateUser: builder.mutation({
+            query: (payload) => ({
+                url: `api/v1/users/${payload.id}`,
+                method: "PUT",
+                body: payload.model,
             })
         })
     })
@@ -18,5 +28,7 @@ const userManagementApi = emptySplitApi.injectEndpoints({
 
 export const {
     useGetUsersQuery,
+    useGetUserQuery,
     useAddUserMutation,
+    useUpdateUserMutation,
 } = userManagementApi;

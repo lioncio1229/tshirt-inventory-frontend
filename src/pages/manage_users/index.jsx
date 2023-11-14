@@ -14,8 +14,10 @@ export default function ManageUsers()
 
     const columns = [
         { id: "email", label: "Email" },
-        { id: "fullname", label: "FullName" },
-        { id: "role", label: "Role" },
+        { id: "fullName", label: "FullName" },
+        { id: "role", label: "Role", formatter: (params) => {
+            return params.role.name;
+        }},
         { id: "isActived", label: "Is active", formatter: (params) => {
             return <>
             {
@@ -28,12 +30,12 @@ export default function ManageUsers()
     ];
 
     const handleAddUser = () => {
-        navigate("/main/manage-users/add-user")
+        navigate("/main/manage-users/add")
     }
 
     const menus = [
-        {label: "Edit", icon: <Edit color="primary"/>, onClick : (id) => {
-        //   navigate(`edit-product/${id}`);
+        {label: "Edit", icon: <Edit color="primary"/>, onClick : (params) => {
+          navigate(`/main/manage-users/edit/${params.email}`);
         }},
         {label: "Delete", icon: <Delete color="error"/>, onClick : (id) => {
         //   setOpen(true);

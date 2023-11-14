@@ -30,12 +30,12 @@ export default function Inventory() {
   ];
 
   const menus = [
-    {label: "Edit", icon: <Edit color="primary"/>, onClick : (id) => {
-      navigate(`edit-product/${id}`);
+    {label: "Edit", icon: <Edit color="primary"/>, onClick : (params) => {
+      navigate(`edit-product/${params.id}`);
     }},
-    {label: "Delete", icon: <Delete color="error"/>, onClick : (id) => {
+    {label: "Delete", icon: <Delete color="error"/>, onClick : (params) => {
       setOpen(true);
-      setId(id);
+      setId(params.id);
     }}
   ]
 

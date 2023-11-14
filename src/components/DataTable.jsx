@@ -22,16 +22,16 @@ export default function DataTable({
   menus=[],
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [targetRowId, setTargetRowId] = useState(null);
+  const [targetRow, setTargetRow] = useState(null);
   const open = Boolean(anchorEl);
 
-  const handleClick = (e, rowId) => {
+  const handleClick = (e, row) => {
     setAnchorEl(e.currentTarget);
-    setTargetRowId(rowId);
+    setTargetRow(row);
   };
   const handleClose = (menu) => {
     setAnchorEl(null);
-    menu.onClick && menu.onClick(targetRowId);
+    menu.onClick && menu.onClick(targetRow);
   };
 
   return (
@@ -67,9 +67,9 @@ export default function DataTable({
           </TableHead>
           <TableBody>
             {rows &&
-              rows.map((row) => {
+              rows.map((row, i) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={i}>
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
@@ -79,7 +79,7 @@ export default function DataTable({
                       );
                     })}
                     <TableCell>
-                      <IconButton onClick={(e) => handleClick(e, row.id)}>
+                      <IconButton onClick={(e) => handleClick(e, row)}>
                         <MoreVert />
                       </IconButton>
                     </TableCell>
