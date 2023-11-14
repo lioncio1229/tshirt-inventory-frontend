@@ -63,7 +63,7 @@ export default function EditUser() {
 
   useEffect(() => {
     if(!data) return;
-    console.log("data: ", data);
+
     setUser({
       fullName: data.fullName,
       roleId: data.role.id,

@@ -22,6 +22,12 @@ const userManagementApi = emptySplitApi.injectEndpoints({
                 method: "PUT",
                 body: payload.model,
             })
+        }),
+        deleteUser: builder.mutation({
+            query: (payload) => ({
+                url: `api/v1/users/${payload.id}`,
+                method: "DELETE",
+            })
         })
     })
 });
@@ -31,4 +37,5 @@ export const {
     useGetUserQuery,
     useAddUserMutation,
     useUpdateUserMutation,
+    useDeleteUserMutation,
 } = userManagementApi;

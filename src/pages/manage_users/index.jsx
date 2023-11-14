@@ -3,12 +3,18 @@ import DataTable from "../../components/DataTable";
 import { Stack, Button, Typography } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import { Add } from "@mui/icons-material";
-import { useGetUsersQuery } from "../../services/userManagementService";
+import { useGetUsersQuery, useDeleteUserMutation } from "../../services/userManagementService";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import CustomDialog from "../../components/CustomDialog";
+import { useState } from "react";
 
 export default function ManageUsers()
 {
+    const [deleteUser] = useDeleteUserMutation();
+    const [open, setOpen] = useState(false);
+    const [id, setId] = useState(null);
+
     const navigate = useNavigate();
     const {data, refetch} = useGetUsersQuery();
 
@@ -37,35 +43,54 @@ export default function ManageUsers()
         {label: "Edit", icon: <Edit color="primary"/>, onClick : (params) => {
           navigate(`/main/manage-users/edit/${params.email}`);
         }},
-        {label: "Delete", icon: <Delete color="error"/>, onClick : (id) => {
-        //   setOpen(true);
-        //   setId(id);
+        {label: "Delete", icon: <Delete color="error"/>, onClick : (params) => {
+          setOpen(true);
+          setId(params.email);
         }}
       ]
+
+    const handleUserDelete = () => {
+        if(!id) return;
+
+        deleteUser({id}).then(resp => {
+            refetch();
+            setId(null);
+            setOpen(false);
+        })
+    }
 
     useEffect(() => {
         refetch();
     }, []);
 
     return (
-        <Stack spacing={3}>
-            <Stack direction="row" justifyContent="space-between">
-                <Searchbar />
-                <Stack direction="row">
-                    <Button
-                        variant="contained"
-                        startIcon={<Add />}
-                        onClick={handleAddUser}
-                    >
-                        Add User
-                    </Button>
-                </Stack>
-            </Stack>
-            <DataTable 
-                columns={columns}
-                rows={data}
-                menus={menus}
+        <>
+            <CustomDialog
+                open={open}
+                description="This action will delete the user. Do you want to proceed?"
+                icon={<Delete color="error" fontSize={"large"} />}
+                onConfirm={handleUserDelete}
+                onClose={() => setOpen(false)}
             />
-        </Stack>
+            <Stack spacing={3}>
+                <Stack direction="row" justifyContent="space-between">
+                    <Searchbar />
+                    <Stack direction="row">
+                        <Button
+                            variant="contained"
+                            startIcon={<Add />}
+                            onClick={handleAddUser}
+                        >
+                            Add User
+                        </Button>
+                    </Stack>
+                </Stack>
+                <DataTable 
+                    columns={columns}
+                    rows={data}
+                    menus={menus}
+                />
+            </Stack>
+        </>
     )
 }
