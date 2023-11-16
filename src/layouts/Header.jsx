@@ -123,7 +123,7 @@ export default function Header({ currentPathName, pages = [], onTabClick }) {
           }}
         >
           {pages.map((page, i) => (
-            <>
+            <div key={i}>
               {page.isEnabled && (
                 <div>
                   {page.pathName === currentPathName ? (
@@ -154,7 +154,7 @@ export default function Header({ currentPathName, pages = [], onTabClick }) {
                   )}
                 </div>
               )}
-            </>
+            </div>
           ))}
         </Box>
 

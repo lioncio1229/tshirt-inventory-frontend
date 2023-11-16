@@ -36,9 +36,9 @@ export default function DataTable({
           <TableHead>
             <TableRow>
               {columns &&
-                columns.map((column) => (
+                columns.map((column, i) => (
                   <TableCell
-                    key={column.id}
+                    key={i}
                     align={column.align}
                     style={{ minWidth: column.minWidth }}
                   >
