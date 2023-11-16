@@ -1,7 +1,7 @@
 import Searchbar from "../../components/Searchbar";
 import DataTable from "../../components/DataTable";
-import { Stack, Button, Typography } from "@mui/material";
-import { Edit, Delete } from "@mui/icons-material";
+import { Stack, Button, Typography, IconButton } from "@mui/material";
+import { Edit, Delete, MoreVert } from "@mui/icons-material";
 import { Add } from "@mui/icons-material";
 import { useGetUsersQuery, useDeleteUserMutation } from "../../services/userManagementService";
 import { useNavigate } from "react-router-dom";
@@ -33,21 +33,28 @@ export default function ManageUsers()
             }
             </>
         }},
+        {label: "Actions", formatter: (params) => {
+            return (
+                <>
+                <IconButton onClick={() => {
+                    navigate(`/main/manage-users/edit/${params.email}`);
+                }}>
+                    <Edit color="secondary" />
+                </IconButton>
+                <IconButton onClick={() => {
+                    setOpen(true);
+                    setId(params.email);
+                }}>
+                    <Delete color="error"/>
+                </IconButton>
+                </>
+            )
+        }}
     ];
 
     const handleAddUser = () => {
         navigate("/main/manage-users/add")
     }
-
-    const menus = [
-        {label: "Edit", icon: <Edit color="primary"/>, onClick : (params) => {
-          navigate(`/main/manage-users/edit/${params.email}`);
-        }},
-        {label: "Delete", icon: <Delete color="error"/>, onClick : (params) => {
-          setOpen(true);
-          setId(params.email);
-        }}
-      ]
 
     const handleUserDelete = () => {
         if(!id) return;
@@ -88,7 +95,6 @@ export default function ManageUsers()
                 <DataTable 
                     columns={columns}
                     rows={data}
-                    menus={menus}
                 />
             </Stack>
         </>
