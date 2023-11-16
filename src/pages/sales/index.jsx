@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import StatCard from "../../components/StatCard";
 import {
   Button,
@@ -9,14 +9,18 @@ import {
   InputLabel,
   MenuItem,
   InputAdornment,
+  IconButton,
 } from "@mui/material";
-import { Add, FilterAlt, Person } from "@mui/icons-material";
+import { Add, FilterAlt, Info } from "@mui/icons-material";
 import Searchbar from "../../components/Searchbar";
 import DataTable from "../../components/DataTable";
 import { useGetTshirtOrdersQuery, useUpdateOrderStatusMutation } from "../../services/orderManagementService";
+import InfoModal from "../../components/InfoModal";
 
 export default function Sales() {
   const [currentStatus, setCurrentStatus] = useState(1);
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [customer, setCustomer] = useState({});
   const {data, refetch} = useGetTshirtOrdersQuery();
   const [updateStatus] = useUpdateOrderStatusMutation();
 
@@ -43,7 +47,7 @@ export default function Sales() {
     { id: "tshirt", label: "Category", formatter: (params) => {
       return params.tshirt.category.name;
     }},
-    { label: "Status", formatter: (params) => {
+    { label: "Status", align: "center", formatter: (params) => {
       return (
         <Select
             value={params.status.id}
@@ -60,8 +64,20 @@ export default function Sales() {
             ))}
           </Select>
       )
+    }},
+    {label: "Info", align: "center", formatter: (params) => {
+      return (
+        <IconButton color="primary" onClick={() => handleClickInfo(params.order.customer)}>
+          <Info/>
+        </IconButton>
+      )
     }}
   ];
+
+  const handleClickInfo = (customer) => {
+    setCustomer(customer);
+    setInfoOpen(true);
+  }
 
   const handleStatusChange = (productId, statusId) => {
     const payload = {
@@ -80,66 +96,69 @@ export default function Sales() {
   };
 
   return (
-    <Stack spacing={2}>
-      <Grid container>
-        <Grid item xs={6}>
-          <StatCard
-            label="Total Sales"
-            value={30}
-            sx={{
-              bgcolor: "success.light",
-              maxWidth: 200,
-            }}
-          />
-        </Grid>
-        <Grid
-          item
-          xs={6}
-          display="flex"
-          justifyContent="flex-end"
-          alignItems="flex-start"
-        >
-          <Button
-            variant="contained"
-            startIcon={<Add />}
-            color="secondary"
-            sx={{
-              textTransform: "capitalize",
-            }}
+    <>
+      <Stack spacing={2}>
+        <Grid container>
+          <Grid item xs={6}>
+            <StatCard
+              label="Total Sales"
+              value={30}
+              sx={{
+                bgcolor: "success.light",
+                maxWidth: 200,
+              }}
+            />
+          </Grid>
+          <Grid
+            item
+            xs={6}
+            display="flex"
+            justifyContent="flex-end"
+            alignItems="flex-start"
           >
-            Create Order
-          </Button>
+            <Button
+              variant="contained"
+              startIcon={<Add />}
+              color="secondary"
+              sx={{
+                textTransform: "capitalize",
+              }}
+            >
+              Create Order
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
-      <Stack direction="row" justifyContent="flex-end" spacing={2}>
-        <Searchbar/>
-        <FormControl sx={{minWidth: 200}}>
-          <InputLabel id="demo-simple-select-label">Filter</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={currentStatus}
-            label="Filter"
-            onChange={handleFilterStatusChange}
-            startAdornment={
-                <InputAdornment position="start">
-                    <FilterAlt/>
-                </InputAdornment>
-            }
-            size="small"
-          >
-            {status.map((status) => (
-              <MenuItem key={status.id} value={status.id}>
-                {status.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Stack direction="row" justifyContent="flex-end" spacing={2}>
+          <Searchbar/>
+          <FormControl sx={{minWidth: 200}}>
+            <InputLabel id="demo-simple-select-label">Filter</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={currentStatus}
+              label="Filter"
+              onChange={handleFilterStatusChange}
+              startAdornment={
+                  <InputAdornment position="start">
+                      <FilterAlt/>
+                  </InputAdornment>
+              }
+              size="small"
+            >
+              {status.map((status) => (
+                <MenuItem key={status.id} value={status.id}>
+                  {status.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Stack>
+        <DataTable
+          columns={columns}
+          rows={data}
+        />
       </Stack>
-      <DataTable
-        columns={columns}
-        rows={data}
-      />
-    </Stack>
+      <InfoModal title="Customer Info" info={customer} open={infoOpen} onClose={() => setInfoOpen(false)} />
+    </>
   );
 }
