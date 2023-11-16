@@ -11,7 +11,6 @@ export default function Searchbar() {
           </InputAdornment>
         )
       }}/>
-      <Button variant="contained" size="small"> Search </Button>
     </Stack>
   );
 }

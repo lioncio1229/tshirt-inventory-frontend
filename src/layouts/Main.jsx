@@ -15,7 +15,8 @@ export default function Main()
         },
         {
           label: "Sales",
-          isEnabled: false,
+          isEnabled: true,
+          pathName: "/main/sales",
         },
         {
           label: "Report",

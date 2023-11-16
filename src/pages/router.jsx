@@ -8,6 +8,7 @@ import EditProduct from "./edit_product";
 import ManageUsers from "./manage_users";
 import AddUser from "./add_user";
 import EditUser from "./edit_user";
+import Sales from "./sales";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
       {
         path: "manage-users/edit/:id",
         element: <EditUser />
+      },
+      {
+        path: "sales",
+        element: <Sales />
       },
     ]
   }

@@ -70,7 +70,16 @@ export default function DataTable({
               rows.map((row, i) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={i}>
-                    {columns.map((column) => {
+                    {columns.map((column, j) => {
+                      if(!column.id)
+                      {
+                        return (
+                          <TableCell key={j} align={column.align}>
+                            {column.formatter(row)}
+                          </TableCell>
+                        )
+                      }
+
                       const value = row[column.id];
                       return (
                         <TableCell key={column.id} align={column.align}>
