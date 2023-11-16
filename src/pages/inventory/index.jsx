@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Grid, IconButton, Menu, MenuItem, Stack  } from "@mui/material";
+import { Grid, IconButton } from "@mui/material";
 import Overview from "../../components/Overview";
 import {default as MenuBar} from "./Menu";
 import DataTable from "../../components/DataTable";
 import { useGetShirtsQuery, useDeleteShirtMutation } from "../../services/tshirtManagementService";
-import { Delete, Edit, MoreVert } from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import CustomDialog from "../../components/CustomDialog";
 
@@ -16,19 +16,6 @@ export default function Inventory() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(null);
-
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [targetRow, setTargetRow] = useState(null);
-  const anchorOpen = Boolean(anchorEl);
-
-  const handleClick = (e, row) => {
-    setAnchorEl(e.currentTarget);
-    setTargetRow(row);
-  };
-  const handleClose = (menu) => {
-    setAnchorEl(null);
-    menu.onClick && menu.onClick(targetRow);
-  };
 
   const columns = [
     { id: "name", label: "Name" },
@@ -42,22 +29,22 @@ export default function Inventory() {
     }},
     {label: "Actions", formatter: (params) => {
       return (
-        <IconButton onClick={(e) => handleClick(e, params)}>
-          <MoreVert />
-        </IconButton>
+          <>
+          <IconButton onClick={() => {
+             navigate(`edit-product/${params.id}`);
+          }}>
+              <Edit color="secondary" />
+          </IconButton>
+          <IconButton onClick={() => {
+              setOpen(true);
+              setId(params.id);
+          }}>
+              <Delete color="error"/>
+          </IconButton>
+          </>
       )
-    }}
+  }}
   ];
-
-  const menus = [
-    {label: "Edit", icon: <Edit color="primary"/>, onClick : (params) => {
-      navigate(`edit-product/${params.id}`);
-    }},
-    {label: "Delete", icon: <Delete color="error"/>, onClick : (params) => {
-      setOpen(true);
-      setId(params.id);
-    }}
-  ]
 
   const handleChangePage = (event, newPage) => {
     setPageIndex(newPage);
@@ -118,7 +105,6 @@ export default function Inventory() {
               data && 
               <DataTable
                 columns={columns}
-                menus={menus}
                 withPagination={true}
                 rows={data.tshirts}
                 pageIndex={pageIndex}
@@ -130,18 +116,6 @@ export default function Inventory() {
           }
         </Grid>
       </Grid>
-      <Menu anchorEl={anchorEl} open={anchorOpen} onClose={handleClose}>
-        {
-          menus.map((menu, i) => (
-            <MenuItem key={i} onClick={() => handleClose(menu)} sx={{minWidth: 150}}>
-              <Stack direction="row" gap={2}>
-                {menu.icon}
-                {menu.label}
-              </Stack>
-            </MenuItem>
-          ))
-        }
-      </Menu>
     </>
   );
 }
