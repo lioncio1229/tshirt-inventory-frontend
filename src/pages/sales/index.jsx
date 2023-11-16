@@ -32,9 +32,6 @@ export default function Sales() {
     { id: "tshirt", label: "Name", formatter: (params) => {
       return params.tshirt.name;
     }},
-    { id: "tshirt", label: "Design", formatter: (params) => {
-      return params.tshirt.design;
-    }},
     { id: "tshirt", label: "Size", formatter: (params) => {
       return params.tshirt.size;
     }},
@@ -43,7 +40,7 @@ export default function Sales() {
     }},
     { id: "unitPrice", label: "Unit Price" },
     { id: "quantity", label: "Quantity" },
-    { id: "tshirt", label: "Category Name", formatter: (params) => {
+    { id: "tshirt", label: "Category", formatter: (params) => {
       return params.tshirt.category.name;
     }},
     { label: "Status", formatter: (params) => {
