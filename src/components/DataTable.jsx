@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,8 +6,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import { IconButton, Menu, MenuItem, Stack } from "@mui/material";
-import { MoreVert } from "@mui/icons-material";
 
 export default function DataTable({
   columns,
@@ -19,21 +16,7 @@ export default function DataTable({
   onPageChange,
   onRowsPerPageChange,
   total,
-  menus=[],
 }) {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [targetRow, setTargetRow] = useState(null);
-  const open = Boolean(anchorEl);
-
-  const handleClick = (e, row) => {
-    setAnchorEl(e.currentTarget);
-    setTargetRow(row);
-  };
-  const handleClose = (menu) => {
-    setAnchorEl(null);
-    menu.onClick && menu.onClick(targetRow);
-  };
-
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       {
@@ -62,7 +45,6 @@ export default function DataTable({
                     {column.label}
                   </TableCell>
                 ))}
-              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -87,11 +69,6 @@ export default function DataTable({
                         </TableCell>
                       );
                     })}
-                    <TableCell>
-                      <IconButton onClick={(e) => handleClick(e, row)}>
-                        <MoreVert />
-                      </IconButton>
-                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -109,21 +86,6 @@ export default function DataTable({
           onPageChange={onPageChange}
           onRowsPerPageChange={onRowsPerPageChange}
         />
-      }
-      {
-        menus.length > 0 &&
-        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-          {
-            menus.map((menu, i) => (
-              <MenuItem key={i} onClick={() => handleClose(menu)} sx={{minWidth: 150}}>
-                <Stack direction="row" gap={2}>
-                  {menu.icon}
-                  {menu.label}
-                </Stack>
-              </MenuItem>
-            ))
-          }
-        </Menu>
       }
     </Paper>
   );

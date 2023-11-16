@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Grid } from "@mui/material";
+import { Grid, IconButton, Menu, MenuItem, Stack  } from "@mui/material";
 import Overview from "../../components/Overview";
-import Menu from "./Menu";
+import {default as MenuBar} from "./Menu";
 import DataTable from "../../components/DataTable";
 import { useGetShirtsQuery, useDeleteShirtMutation } from "../../services/tshirtManagementService";
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit, MoreVert } from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import CustomDialog from "../../components/CustomDialog";
 
@@ -17,6 +17,19 @@ export default function Inventory() {
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(null);
 
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [targetRow, setTargetRow] = useState(null);
+  const anchorOpen = Boolean(anchorEl);
+
+  const handleClick = (e, row) => {
+    setAnchorEl(e.currentTarget);
+    setTargetRow(row);
+  };
+  const handleClose = (menu) => {
+    setAnchorEl(null);
+    menu.onClick && menu.onClick(targetRow);
+  };
+
   const columns = [
     { id: "name", label: "Name" },
     { id: "design", label: "Design" },
@@ -27,6 +40,13 @@ export default function Inventory() {
     { id: "categoryName", label: "Category Name", formatter: (params) => {
       return params.category.name;
     }},
+    {label: "Actions", formatter: (params) => {
+      return (
+        <IconButton onClick={(e) => handleClick(e, params)}>
+          <MoreVert />
+        </IconButton>
+      )
+    }}
   ];
 
   const menus = [
@@ -89,7 +109,7 @@ export default function Inventory() {
           />
         </Grid>
         <Grid item xs={12}>
-          <Menu />
+          <MenuBar />
         </Grid>
         <Grid item xs={12}>
           {
@@ -110,6 +130,18 @@ export default function Inventory() {
           }
         </Grid>
       </Grid>
+      <Menu anchorEl={anchorEl} open={anchorOpen} onClose={handleClose}>
+        {
+          menus.map((menu, i) => (
+            <MenuItem key={i} onClick={() => handleClose(menu)} sx={{minWidth: 150}}>
+              <Stack direction="row" gap={2}>
+                {menu.icon}
+                {menu.label}
+              </Stack>
+            </MenuItem>
+          ))
+        }
+      </Menu>
     </>
   );
 }
