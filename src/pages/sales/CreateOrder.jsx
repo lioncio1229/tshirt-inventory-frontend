@@ -37,7 +37,6 @@ export default function CreateOrder({ open, onCreate, onClose }) {
     onClose && onClose();
   }
 
-
   return (
     <Modal
       open={open}
@@ -64,7 +63,7 @@ export default function CreateOrder({ open, onCreate, onClose }) {
                 <Grid item xs={7}>
                   <TextField
                     value={customer ? customer.firstName + " " + customer.lastName : "Customer"}
-                    disabled
+                    disabled={!customer}
                     fullWidth
                     sx={{ ml: -2 }}
                   />
@@ -91,7 +90,7 @@ export default function CreateOrder({ open, onCreate, onClose }) {
                 <Grid item xs={7}>
                   <TextField
                     value={product ? product.name : "Product"}
-                    disabled
+                    disabled={!product}
                     fullWidth
                     sx={{ ml: -2 }}
                   />
@@ -116,7 +115,7 @@ export default function CreateOrder({ open, onCreate, onClose }) {
 
               <Grid container columnSpacing={2}>
                 <Grid item xs={6} sx={{ ml: -2 }}>
-                  <Button variant="contained" size="large" fullWidth>
+                  <Button variant="contained" size="large" fullWidth disabled={!customer || !product}>
                     Create
                   </Button>
                 </Grid>

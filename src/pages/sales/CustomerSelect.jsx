@@ -6,11 +6,9 @@ import {
   Container,
   Typography,
   Stack,
-  TextField,
-  Grid,
   Checkbox,
 } from "@mui/material";
-import { Person, ProductionQuantityLimits } from "@mui/icons-material";
+import { Person } from "@mui/icons-material";
 import DataTable from "../../components/DataTable";
 import { useGetCustomersQuery } from "../../services/customerManagementService";
 import { useEffect, useState } from "react";
