@@ -59,7 +59,7 @@ export default function Header({ currentPathName, pages = [], onTabClick }) {
         onConfirm={handleLogout}
         onClose={() => setOpen(false)}
       />
-      <AppBar position="static" elevation={1}>
+      <AppBar position="sticky" elevation={1}>
         <Toolbar>
           <IconButton href="/main" sx={{ mr: 1 }}>
             <Inventory
