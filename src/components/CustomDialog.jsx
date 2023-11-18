@@ -1,6 +1,13 @@
 import { Box, Button, Typography, Modal, Grid } from "@mui/material";
 
-export default function CustomDialog({ description, icon, open, onConfirm, onClose }) {
+export default function CustomDialog({
+  description,
+  icon,
+  open,
+  onConfirm,
+  onClose,
+  confirmOnly = false,
+}) {
 
   return (
     <Modal
@@ -24,11 +31,19 @@ export default function CustomDialog({ description, icon, open, onConfirm, onClo
         <Grid container gap={4}>
           <Grid item xs={12}>
             <Grid container alignItems="center">
-              {icon && <Grid item xs={2}>
-                <Box sx={{display: "flex", justifyContent: "center", alignItem: "center"}}>
+              {icon && (
+                <Grid item xs={2}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItem: "center",
+                    }}
+                  >
                     {icon}
-                </Box>
-                </Grid>}
+                  </Box>
+                </Grid>
+              )}
               <Grid item xs={10}>
                 <Typography>{description}</Typography>
               </Grid>
@@ -36,12 +51,26 @@ export default function CustomDialog({ description, icon, open, onConfirm, onClo
           </Grid>
           <Grid item xs={12}>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Button variant="contained" fullWidth onClick={onConfirm}>Ok</Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Button variant="contained" fullWidth onClick={onClose}>Cancel</Button>
-              </Grid>
+              {confirmOnly ? (
+                <Grid item xs={12} display="flex" justifyContent="center">
+                  <Button variant="contained" onClick={onConfirm} sx={{width: 120}}>
+                    Ok
+                  </Button>
+                </Grid>
+              ) : (
+                <>
+                  <Grid item xs={6}>
+                    <Button variant="contained" fullWidth onClick={onConfirm}>
+                      Ok
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button variant="contained" fullWidth onClick={onClose}>
+                      Cancel
+                    </Button>
+                  </Grid>
+                </>
+              )}
             </Grid>
           </Grid>
         </Grid>
