@@ -15,7 +15,7 @@ import { Inventory } from "@mui/icons-material";
 import CustomDialog from "../components/CustomDialog";
 import { useNavigate } from "react-router-dom";
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Account", "Logout"];
 
 export default function Header({ currentPathName, pages = [], onTabClick }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -45,7 +45,7 @@ export default function Header({ currentPathName, pages = [], onTabClick }) {
   };
 
   const handleLogout = () => {
-    localStorage.setItem("token", "");
+    localStorage.removeItem("token");
     navigate("/");
     setOpen(false);
   };

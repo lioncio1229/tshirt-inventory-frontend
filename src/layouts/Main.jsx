@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
 import Header from "./Header";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
@@ -7,6 +7,7 @@ import { jwtDecode } from "jwt-decode";
 export default function Main() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [pages, setPages] = useState([]);
 
   const handleTabClick = (page) => {
     navigate(page.pathName);
@@ -16,8 +17,7 @@ export default function Main() {
     return inputString.replace(/\/$/, "");
   };
 
-  const pages = useMemo(() => {
-
+  useEffect(() => {
     const allPage = [
       {
         label: "Inventory",
@@ -41,28 +41,30 @@ export default function Main() {
     ];
 
     const token = localStorage.getItem("token");
+    if(!token) {
+      navigate("/");
+      return;
+    }
 
     try {
       const decoded = jwtDecode(token);
       const role = decoded.role.toLowerCase();
-      return allPage.filter((page) => page.roles && page.roles.includes(role));
-    } catch (e) {
+      const selectedPages = allPage.filter((page) => page.roles && page.roles.includes(role));
+
+      if(selectedPages.length > 0)
+      {
+        setPages(selectedPages);
+        navigate(selectedPages[0].pathName)
+        return;
+      }
+      
+      navigate("/main/prohibited");
+    } 
+    catch (e) {
       console.error(e);
     }
 
-    return [];
   }, []);
-
-  useEffect(() => {
-    if(pages.length <= 0)
-    {
-      navigate("/main/prohibited");
-      return;
-    }
-
-    navigate(pages[0].pathName)
-
-  }, [pages]);
 
   return (
     <>
