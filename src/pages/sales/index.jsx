@@ -14,7 +14,11 @@ import {
 import { Add, FilterAlt, Info } from "@mui/icons-material";
 import Searchbar from "../../components/Searchbar";
 import DataTable from "../../components/DataTable";
-import { useGetTshirtOrdersQuery, useUpdateOrderStatusMutation } from "../../services/orderManagementService";
+import {
+  useGetTshirtOrdersQuery,
+  useUpdateOrderStatusMutation,
+  useCreateOrderMutation,
+} from "../../services/orderManagementService";
 import InfoModal from "../../components/InfoModal";
 import CreateOrder from "./CreateOrder";
 
@@ -22,8 +26,9 @@ export default function Sales() {
   const [currentStatus, setCurrentStatus] = useState(1);
   const [infoOpen, setInfoOpen] = useState(false);
   const [customer, setCustomer] = useState({});
-  const {data, refetch} = useGetTshirtOrdersQuery();
+  const { data, refetch } = useGetTshirtOrdersQuery();
   const [updateStatus] = useUpdateOrderStatusMutation();
+  const [createOrder] = useCreateOrderMutation();
   const [createOrderOpen, setCreateOrderOpen] = useState(false);
 
   const status = [
@@ -35,28 +40,49 @@ export default function Sales() {
 
   const columns = [
     { id: "productId", label: "Product Id" },
-    { id: "tshirt", label: "Name", formatter: (params) => {
-      return params.tshirt.name;
-    }},
-    { id: "tshirt", label: "Size", formatter: (params) => {
-      return params.tshirt.size;
-    }},
-    { id: "tshirt", label: "Color", formatter: (params) => {
-      return params.tshirt.color;
-    }},
+    {
+      id: "tshirt",
+      label: "Name",
+      formatter: (params) => {
+        return params.tshirt.name;
+      },
+    },
+    {
+      id: "tshirt",
+      label: "Size",
+      formatter: (params) => {
+        return params.tshirt.size;
+      },
+    },
+    {
+      id: "tshirt",
+      label: "Color",
+      formatter: (params) => {
+        return params.tshirt.color;
+      },
+    },
     { id: "unitPrice", label: "Unit Price" },
     { id: "quantity", label: "Quantity" },
-    { id: "tshirt", label: "Category", formatter: (params) => {
-      return params.tshirt.category.name;
-    }},
-    { label: "Status", align: "center", formatter: (params) => {
-      return (
-        <Select
+    {
+      id: "tshirt",
+      label: "Category",
+      formatter: (params) => {
+        return params.tshirt.category.name;
+      },
+    },
+    {
+      label: "Status",
+      align: "center",
+      formatter: (params) => {
+        return (
+          <Select
             value={params.status.id}
-            onChange={(e) => handleStatusChange(params.productId, e.target.value)}
+            onChange={(e) =>
+              handleStatusChange(params.productId, e.target.value)
+            }
             size="small"
             sx={{
-              width: 130
+              width: 130,
             }}
           >
             {status.map((status) => (
@@ -65,37 +91,67 @@ export default function Sales() {
               </MenuItem>
             ))}
           </Select>
-      )
-    }},
-    {label: "Info", align: "center", formatter: (params) => {
-      return (
-        <IconButton color="primary" onClick={() => handleClickInfo(params.order.customer)}>
-          <Info/>
-        </IconButton>
-      )
-    }}
+        );
+      },
+    },
+    {
+      label: "Info",
+      align: "center",
+      formatter: (params) => {
+        return (
+          <IconButton
+            color="primary"
+            onClick={() => handleClickInfo(params.order.customer)}
+          >
+            <Info />
+          </IconButton>
+        );
+      },
+    },
   ];
 
   const handleClickInfo = (customer) => {
     setCustomer(customer);
     setInfoOpen(true);
-  }
+  };
 
   const handleStatusChange = (productId, statusId) => {
     const payload = {
       id: productId,
       model: {
-        statusId
+        statusId,
       },
-    }
-    updateStatus(payload).then(resp => {
+    };
+    updateStatus(payload).then((resp) => {
       refetch();
     });
-  }
+  };
 
   const handleFilterStatusChange = (e) => {
     setCurrentStatus(e.target.value);
   };
+
+  const handleCreateOrder = (customer, product, quantity) => {
+    const payload = {
+      id: customer.id,
+      model: {
+        orderNumber: 0,
+        paymentMethod: "gcash",
+        tshirtRequests: [
+          {
+            tshirtId: product.id,
+            quantity: quantity
+          }
+        ]
+      }
+    }
+
+    createOrder(payload).then(resp => {
+      console.log("Order Created!");
+      refetch();
+      setCreateOrderOpen(false);
+    });
+  }
 
   return (
     <>
@@ -132,8 +188,8 @@ export default function Sales() {
           </Grid>
         </Grid>
         <Stack direction="row" justifyContent="flex-end" spacing={2}>
-          <Searchbar/>
-          <FormControl sx={{minWidth: 200}}>
+          <Searchbar />
+          <FormControl sx={{ minWidth: 200 }}>
             <InputLabel id="demo-simple-select-label">Filter</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -142,9 +198,9 @@ export default function Sales() {
               label="Filter"
               onChange={handleFilterStatusChange}
               startAdornment={
-                  <InputAdornment position="start">
-                      <FilterAlt/>
-                  </InputAdornment>
+                <InputAdornment position="start">
+                  <FilterAlt />
+                </InputAdornment>
               }
               size="small"
             >
@@ -156,13 +212,19 @@ export default function Sales() {
             </Select>
           </FormControl>
         </Stack>
-        <DataTable
-          columns={columns}
-          rows={data}
-        />
+        <DataTable columns={columns} rows={data} />
       </Stack>
-      <InfoModal title="Customer Info" info={customer} open={infoOpen} onClose={() => setInfoOpen(false)} />
-      <CreateOrder open={createOrderOpen} onClose={() => setCreateOrderOpen(false)} />
+      <InfoModal
+        title="Customer Info"
+        info={customer}
+        open={infoOpen}
+        onClose={() => setInfoOpen(false)}
+      />
+      <CreateOrder
+        open={createOrderOpen}
+        onCreateOrder={handleCreateOrder}
+        onClose={() => setCreateOrderOpen(false)}
+      />
     </>
   );
 }

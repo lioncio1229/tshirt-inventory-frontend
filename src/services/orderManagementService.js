@@ -13,10 +13,18 @@ const orderManagementApi = emptySplitApi.injectEndpoints({
                 body: payload.model,
             })
         }),
+        createOrder: builder.mutation({
+            query: (payload) => ({
+                url: `api/v1/customer/${payload.id}/order`,
+                method: "POST",
+                body: payload.model,
+            })
+        })
     })
 });
 
 export const {
     useGetTshirtOrdersQuery,
     useUpdateOrderStatusMutation,
+    useCreateOrderMutation,
 } = orderManagementApi;

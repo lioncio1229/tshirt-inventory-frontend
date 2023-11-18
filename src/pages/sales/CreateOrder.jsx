@@ -13,13 +13,15 @@ import { Person, ProductionQuantityLimits } from "@mui/icons-material";
 import CustomerSelect from "./CustomerSelect";
 import ProductSelect from "./ProductSelect";
 import { useState } from "react";
+import InputCounter from "../../components/InputCounter";
 
-export default function CreateOrder({ open, onCreate, onClose }) {
+export default function CreateOrder({ open, onCreateOrder, onClose }) {
   const [openCustomerSelect, setOpenCustomerSelect] = useState(false);
   const [openProductSelect, setOpenProductSelect] = useState(false);
 
   const [customer, setCustomer] = useState(null);
   const [product, setProduct] = useState(null);
+  const [quantity, setQuantity] = useState(0);
 
   const handleCustomerSelect = (selectedCustomer) => {
     setCustomer(selectedCustomer);
@@ -35,6 +37,16 @@ export default function CreateOrder({ open, onCreate, onClose }) {
     setCustomer(null);
     setProduct(null);
     onClose && onClose();
+  };
+
+  const handleQuantityChange = (quantity) => {
+    setQuantity(quantity);
+  }
+
+  const handleCreateOrder = () => {
+    onCreateOrder && onCreateOrder(customer, product, quantity);
+    setCustomer(null);
+    setProduct(null);
   }
 
   return (
@@ -62,7 +74,11 @@ export default function CreateOrder({ open, onCreate, onClose }) {
               <Grid container columnSpacing={2}>
                 <Grid item xs={7}>
                   <TextField
-                    value={customer ? customer.firstName + " " + customer.lastName : "Customer"}
+                    value={
+                      customer
+                        ? customer.firstName + " " + customer.lastName
+                        : "Customer"
+                    }
                     disabled={!customer}
                     fullWidth
                     sx={{ ml: -2 }}
@@ -113,9 +129,20 @@ export default function CreateOrder({ open, onCreate, onClose }) {
                 </Grid>
               </Grid>
 
+                <div>
+                    <Typography color="primary" mb={2}>Quantity</Typography>
+                    <InputCounter onChange={handleQuantityChange}/>
+                </div>
+
               <Grid container columnSpacing={2}>
                 <Grid item xs={6} sx={{ ml: -2 }}>
-                  <Button variant="contained" size="large" fullWidth disabled={!customer || !product}>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    fullWidth
+                    disabled={!customer || !product || quantity <= 0}
+                    onClick={handleCreateOrder}
+                  >
                     Create
                   </Button>
                 </Grid>
