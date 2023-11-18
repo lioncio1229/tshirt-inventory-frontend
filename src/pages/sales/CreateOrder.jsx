@@ -10,8 +10,23 @@ import {
   Grid,
 } from "@mui/material";
 import { Person, ProductionQuantityLimits } from "@mui/icons-material";
+import CustomerSelect from "./CustomerSelect";
+import { useState } from "react";
 
 export default function CreateOrder({ open, onCreate, onClose }) {
+  const [openCustomerSelect, setOpenCustomerSelect] = useState(false);
+  const [customer, setCustomer] = useState(null);
+
+  const handleCustomerSelect = (selectedCustomer) => {
+    setCustomer(selectedCustomer);
+    setOpenCustomerSelect(false);
+  };
+
+  const handleCancel = () => {
+    setCustomer(null);
+    onClose && onClose();
+  }
+
   return (
     <Modal
       open={open}
@@ -37,7 +52,7 @@ export default function CreateOrder({ open, onCreate, onClose }) {
               <Grid container columnSpacing={2}>
                 <Grid item xs={7}>
                   <TextField
-                    value="Customer"
+                    value={customer ? customer.firstName + " " + customer.lastName : "Customer"}
                     disabled
                     fullWidth
                     sx={{ ml: -2 }}
@@ -54,6 +69,7 @@ export default function CreateOrder({ open, onCreate, onClose }) {
                     }}
                     fullWidth
                     startIcon={<Person />}
+                    onClick={() => setOpenCustomerSelect(true)}
                   >
                     Select Customer
                   </Button>
@@ -98,7 +114,7 @@ export default function CreateOrder({ open, onCreate, onClose }) {
                     size="large"
                     color="error"
                     fullWidth
-                    onClick={onClose}
+                    onClick={handleCancel}
                   >
                     Cancel
                   </Button>
@@ -106,6 +122,11 @@ export default function CreateOrder({ open, onCreate, onClose }) {
               </Grid>
             </Stack>
           </Paper>
+          <CustomerSelect
+            open={openCustomerSelect}
+            onSelect={handleCustomerSelect}
+            onClose={() => setOpenCustomerSelect(false)}
+          />
         </Container>
       </Box>
     </Modal>
