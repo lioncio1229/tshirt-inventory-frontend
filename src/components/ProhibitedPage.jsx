@@ -13,7 +13,7 @@ export default function ProhibitedPage(){
                 }}
             >
                 <Typography variant="h3" color="error" textAlign="center">No Access</Typography>
-                <Typography>You have no access to the your requested route</Typography>
+                <Typography>You have no access to the sytem. Reach out to your administrator for assistance</Typography>
             </Stack>
         </Container>
     )

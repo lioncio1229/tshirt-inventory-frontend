@@ -22,7 +22,7 @@ export default function Main() {
       {
         label: "Inventory",
         pathName: "/main",
-        roles: ["admin", "user"],
+        roles: ["admin"],
       },
       {
         label: "Sales",
