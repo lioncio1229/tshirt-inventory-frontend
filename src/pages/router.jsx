@@ -9,6 +9,7 @@ import ManageUsers from "./manage_users";
 import AddUser from "./add_user";
 import EditUser from "./edit_user";
 import Sales from "./sales";
+import ProhibitedPage from "../components/ProhibitedPage";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
     path: "/main",
     element: <Main />,
     children: [
+      {
+        path: "prohibited",
+        element: <ProhibitedPage />
+      },
       {
         path: "",
         element: <Inventory />

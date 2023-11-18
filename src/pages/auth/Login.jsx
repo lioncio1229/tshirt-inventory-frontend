@@ -7,10 +7,12 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { useLoginMutation } from "../../services/authManagementService";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
 
   const [login] = useLoginMutation();
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -23,6 +25,7 @@ export default function Login() {
 
     login(model).unwrap().then(resp => {
       localStorage.setItem("token", resp.token);
+      navigate("/main");
     });
   };
 
