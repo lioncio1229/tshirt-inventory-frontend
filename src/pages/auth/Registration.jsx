@@ -41,7 +41,6 @@ export default function Registration() {
     const email = data.get("email").trim();
     const fullName = data.get("fullName").trim();
     const password = data.get("password");
-    const confirmPassword = data.get("confirmPassword");
 
     const model = {
       email,

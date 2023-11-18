@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -14,6 +15,13 @@ export default function Login() {
   const [login] = useLoginMutation();
   const navigate = useNavigate();
 
+  const [errorState, setErrorState] = useState({
+    emailHasError: true,
+    passwordHasError: true,
+  });
+
+  const isEnabled = useMemo(() => Object.values(errorState).every(item => !item), [errorState]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -28,6 +36,30 @@ export default function Login() {
       navigate("/main");
     });
   };
+
+  const handleEmailInputChange = (e) => {
+    const { value } = e.target;
+    const email = value.trim();
+    let hasError = false;
+
+    if(email.trim() === "")
+    {
+      hasError = true;
+    }
+
+    setErrorState({...errorState, emailHasError: hasError});
+  }
+
+  const handlePasswordInputChange = (e) => {
+    const { value: password } = e.target;
+    let hasError = false;
+
+    if(password === ""){
+      hasError = true;
+    }
+
+    setErrorState({...errorState, passwordHasError: hasError});
+  }
 
   return (
     <Box
@@ -54,6 +86,7 @@ export default function Login() {
               label="Email Address"
               name="email"
               autoComplete="email"
+              onChange={handleEmailInputChange}
             />
           </Grid>
           <Grid item xs={12}>
@@ -65,6 +98,7 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="new-password"
+              onChange={handlePasswordInputChange}
             />
           </Grid>
         </Grid>
@@ -73,6 +107,7 @@ export default function Login() {
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
+          disabled={!isEnabled}
         >
           Login
         </Button>
