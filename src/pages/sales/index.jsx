@@ -16,6 +16,7 @@ import Searchbar from "../../components/Searchbar";
 import DataTable from "../../components/DataTable";
 import { useGetTshirtOrdersQuery, useUpdateOrderStatusMutation } from "../../services/orderManagementService";
 import InfoModal from "../../components/InfoModal";
+import CreateOrder from "./CreateOrder";
 
 export default function Sales() {
   const [currentStatus, setCurrentStatus] = useState(1);
@@ -23,6 +24,7 @@ export default function Sales() {
   const [customer, setCustomer] = useState({});
   const {data, refetch} = useGetTshirtOrdersQuery();
   const [updateStatus] = useUpdateOrderStatusMutation();
+  const [createOrderOpen, setCreateOrderOpen] = useState(false);
 
   const status = [
     { id: 1, label: "Queue" },
@@ -123,6 +125,7 @@ export default function Sales() {
               sx={{
                 textTransform: "capitalize",
               }}
+              onClick={() => setCreateOrderOpen(true)}
             >
               Create Order
             </Button>
@@ -159,6 +162,7 @@ export default function Sales() {
         />
       </Stack>
       <InfoModal title="Customer Info" info={customer} open={infoOpen} onClose={() => setInfoOpen(false)} />
+      <CreateOrder open={createOrderOpen} onClose={() => setCreateOrderOpen(false)} />
     </>
   );
 }
