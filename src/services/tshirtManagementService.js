@@ -6,6 +6,9 @@ const tshirtManagementApi = emptySplitApi.injectEndpoints({
         getShirts: builder.query({
             query: (model) => `api/v1/tshirt/q?skipRows=${model.pageIndex}&numberOfItems=${model.rowsPerPage}`
         }),
+        getShirtsWithoutPagination: builder.query({
+            query: () => `api/v1/tshirt`
+        }),
         getShirt: builder.query({
             query: (model) => `api/v1/tshirt/${model.id}`
         }),
@@ -34,6 +37,7 @@ const tshirtManagementApi = emptySplitApi.injectEndpoints({
 
 export const {
     useGetShirtsQuery,
+    useGetShirtsWithoutPaginationQuery,
     useGetShirtQuery,
     useAddShirtMutation,
     useEditShirtMutation,

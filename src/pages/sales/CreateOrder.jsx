@@ -11,21 +11,32 @@ import {
 } from "@mui/material";
 import { Person, ProductionQuantityLimits } from "@mui/icons-material";
 import CustomerSelect from "./CustomerSelect";
+import ProductSelect from "./ProductSelect";
 import { useState } from "react";
 
 export default function CreateOrder({ open, onCreate, onClose }) {
   const [openCustomerSelect, setOpenCustomerSelect] = useState(false);
+  const [openProductSelect, setOpenProductSelect] = useState(false);
+
   const [customer, setCustomer] = useState(null);
+  const [product, setProduct] = useState(null);
 
   const handleCustomerSelect = (selectedCustomer) => {
     setCustomer(selectedCustomer);
     setOpenCustomerSelect(false);
   };
 
+  const handleProductSelect = (selectedProduct) => {
+    setProduct(selectedProduct);
+    setOpenProductSelect(false);
+  };
+
   const handleCancel = () => {
     setCustomer(null);
+    setProduct(null);
     onClose && onClose();
   }
+
 
   return (
     <Modal
@@ -79,7 +90,7 @@ export default function CreateOrder({ open, onCreate, onClose }) {
               <Grid container columnSpacing={2}>
                 <Grid item xs={7}>
                   <TextField
-                    value="Product"
+                    value={product ? product.name : "Product"}
                     disabled
                     fullWidth
                     sx={{ ml: -2 }}
@@ -96,6 +107,7 @@ export default function CreateOrder({ open, onCreate, onClose }) {
                     }}
                     fullWidth
                     startIcon={<ProductionQuantityLimits />}
+                    onClick={() => setOpenProductSelect(true)}
                   >
                     Select Product
                   </Button>
@@ -126,6 +138,11 @@ export default function CreateOrder({ open, onCreate, onClose }) {
             open={openCustomerSelect}
             onSelect={handleCustomerSelect}
             onClose={() => setOpenCustomerSelect(false)}
+          />
+          <ProductSelect
+            open={openProductSelect}
+            onSelect={handleProductSelect}
+            onClose={() => setOpenProductSelect(false)}
           />
         </Container>
       </Box>
