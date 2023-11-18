@@ -41,7 +41,7 @@ export default function Main() {
     ];
 
     const token = localStorage.getItem("token");
-    if(!token) {
+    if (!token) {
       navigate("/");
       return;
     }
@@ -49,21 +49,26 @@ export default function Main() {
     try {
       const decoded = jwtDecode(token);
       const role = decoded.role.toLowerCase();
-      const selectedPages = allPage.filter((page) => page.roles && page.roles.includes(role));
+      const selectedPages = allPage.filter(
+        (page) => page.roles && page.roles.includes(role)
+      );
 
-      if(selectedPages.length > 0)
-      {
+      if (selectedPages.length > 0) {
         setPages(selectedPages);
-        navigate(selectedPages[0].pathName)
+        let currentPath = selectedPages.find(
+          (page) => page.pathName === removeTrailingSlash(location.pathname)
+        );
+
+        if (!currentPath) {
+          currentPath = selectedPages[0];
+        }
+
+        navigate(currentPath.pathName);
         return;
       }
-      
-      navigate("/main/prohibited");
-    } 
-    catch (e) {
+    } catch (e) {
       console.error(e);
     }
-
   }, []);
 
   return (
