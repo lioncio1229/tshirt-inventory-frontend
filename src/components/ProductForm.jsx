@@ -9,16 +9,38 @@ import {
 } from "@mui/material";
 import LabeledInputfield from "./LabeledInputField";
 import GalleryIcon from "../assets/gallery.png";
+import { useRef } from "react";
 
 export default function ProductForm({
   title,
   submitLabel,
   onChange,
+  onImageChange,
   onAutoCompleteChange,
   values = {},
   onSubmit,
   onCancel,
 }) {
+  const imageInputRef = useRef(null);
+
+  const handleImageClick = () => {
+    if (!imageInputRef.current) return;
+
+    imageInputRef.current.click();
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+
+    if (file.size > maxSizeInBytes) {
+      alert("File size exceeds the maximum limit of 5MB.");
+      return;
+    }
+
+    onImageChange && onImageChange(file);
+  };
+
   return (
     <Grid container spacing={2} columnSpacing={4}>
       <Grid item xs={12}>
@@ -26,6 +48,7 @@ export default function ProductForm({
           {title}
         </Typography>
       </Grid>
+
       <Grid item xs={6} md={3}>
         <Box
           sx={{
@@ -55,7 +78,18 @@ export default function ProductForm({
                 transform: "scale(1.12)",
               },
             }}
+            onClick={handleImageClick}
           >
+            <Box
+              ref={imageInputRef}
+              component="input"
+              type="file"
+              accept="image/jpeg, image/jpg, image/png"
+              onChange={handleImageChange}
+              sx={{
+                display: "none",
+              }}
+            />
             <Box
               component="img"
               src={GalleryIcon}
@@ -67,9 +101,24 @@ export default function ProductForm({
               }}
             />
             <Typography>Click to add image</Typography>
+
+            <Typography fontSize={10} color="grey.500">
+              Max file size:{" "}
+              <Typography component="span" fontSize="inherit" color="grey.600" fontWeight={600}>
+                5MB
+              </Typography>
+            </Typography>
+
+            <Typography fontSize={10} color="grey.500">
+              Supported file types:
+              <Typography component="span" fontSize="inherit" color="grey.600" fontWeight={600}>
+                JPG, JPEG, PNG
+              </Typography>
+            </Typography>
           </Box>
         </Box>
       </Grid>
+
       <Grid item xs={12} md={9}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>

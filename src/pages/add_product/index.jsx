@@ -17,6 +17,8 @@ export default function AddProduct() {
     category: {id: 1, name: "Any"}
   });
 
+  const [file, setFile] = useState(null);
+
   const handleChange = (e) => {
     setValues({...values, [e.target.id]: e.target.value});
   }
@@ -41,6 +43,11 @@ export default function AddProduct() {
     });
   };
 
+  const handleImageChange = (file) => {
+    console.log("file: ", file);
+    setFile(file);
+  }
+
   const handleCancel = () => {
     navigate("/main");
   };
@@ -51,6 +58,7 @@ export default function AddProduct() {
       submitLabel="Add"
       values={values}
       onChange={handleChange}
+      onImageChange={handleImageChange}
       onAutoCompleteChange={handleAutocompleteChange}
       onSubmit={handleSubmit}
       onCancel={handleCancel}
