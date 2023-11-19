@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Grid, IconButton } from "@mui/material";
+import { Grid, IconButton, Box } from "@mui/material";
 import Overview from "../../components/Overview";
 import {default as MenuBar} from "./Menu";
 import DataTable from "../../components/DataTable";
@@ -18,6 +18,16 @@ export default function Inventory() {
   const [id, setId] = useState(null);
 
   const columns = [
+    {
+      label: "Image", formatter: (params) => {
+        return (
+          <Box component="img" src={params.productImageUrl} sx={{
+            width: 80,
+            height: "auto",
+          }} />
+        )
+      }
+    },
     { id: "name", label: "Name" },
     { id: "design", label: "Design" },
     { id: "size", label: "Size" },
