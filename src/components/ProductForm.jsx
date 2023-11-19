@@ -33,7 +33,11 @@ export default function ProductForm({
             height: { xs: "40vw", md: "21vw" },
             cursor: "pointer",
             transition: "background-color 0.5s",
-            p: 2,
+            p: 1.5,
+            "&:hover": {
+              bgcolor: "grey.400",
+            },
+            borderRadius: 3,
           }}
         >
           <Box
