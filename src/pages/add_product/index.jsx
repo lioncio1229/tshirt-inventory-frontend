@@ -1,11 +1,12 @@
 import { useState } from "react";
 import ProductForm from "../../components/ProductForm";
-import { useAddShirtMutation } from "../../services/tshirtManagementService";
+import { useAddShirtMutation, useUploadImageMutation } from "../../services/tshirtManagementService";
 import { useNavigate } from "react-router-dom";
 
 export default function AddProduct() {
   const navigate = useNavigate();
   const [addShirt] = useAddShirtMutation();
+  const [uploadImage] = useUploadImageMutation();
 
   const [values, setValues] = useState({
     name: "",
@@ -29,14 +30,29 @@ export default function AddProduct() {
 
   const handleSubmit = () => {
     const category = values.category;
-    if(category == null) return;
+    if(category == null && !file) return;
 
     const model = {...values};
     delete model.category;
     model.categoryId = category.id;
 
-    addShirt(model).then((resp) => {
-      navigate("/main");
+    addShirt(model).unwrap().then((resp) => {
+
+      //Upload Image
+      const formData = new FormData();
+      const renamedFile = new File([file], resp.id, {
+        type: file.type,
+      });
+
+      formData.append("image", renamedFile);
+
+      uploadImage(formData).then(resp2 => {
+        navigate("/main");
+      })
+      .catch((err) => {
+        console.err(err);
+      })
+
     })
     .catch((err) => {
       console.error(err);
@@ -44,7 +60,6 @@ export default function AddProduct() {
   };
 
   const handleImageChange = (file) => {
-    console.log("file: ", file);
     setFile(file);
   }
 
@@ -58,6 +73,7 @@ export default function AddProduct() {
       submitLabel="Add"
       values={values}
       onChange={handleChange}
+      imageFile={file}
       onImageChange={handleImageChange}
       onAutoCompleteChange={handleAutocompleteChange}
       onSubmit={handleSubmit}

@@ -6,6 +6,8 @@ import {
   TextField,
   Button,
   Stack,
+  Chip,
+  Paper,
 } from "@mui/material";
 import LabeledInputfield from "./LabeledInputField";
 import GalleryIcon from "../assets/gallery.png";
@@ -15,6 +17,7 @@ export default function ProductForm({
   title,
   submitLabel,
   onChange,
+  imageFile,
   onImageChange,
   onAutoCompleteChange,
   values = {},
@@ -51,72 +54,118 @@ export default function ProductForm({
 
       <Grid item xs={6} md={3}>
         <Box
+          ref={imageInputRef}
+          component="input"
+          type="file"
+          accept="image/jpeg, image/jpg, image/png"
+          onChange={handleImageChange}
           sx={{
-            bgcolor: "grey.300",
-            height: { xs: "40vw", md: "21vw" },
-            cursor: "pointer",
-            transition: "background-color 0.5s",
-            p: 1.5,
-            "&:hover": {
-              bgcolor: "grey.400",
-            },
-            borderRadius: 3,
+            display: "none",
           }}
-        >
-          <Box
+        />
+        {imageFile ? (
+          <Paper
             sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-              width: "100%",
-              height: "100%",
-              backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='15' ry='15' stroke='white' stroke-width='5' stroke-dasharray='6%2c 15' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
-            border-radius: 15px;`,
-
-              "&:hover img": {
-                transform: "scale(1.12)",
+              height: { xs: "40vw", md: "21vw" },
+              position: "relative",
+              cursor: "pointer",
+              "&:hover .css-yrq8zb-MuiChip-root": {
+                opacity: 1,
+                transition: "opacity 0.3s",
               },
             }}
             onClick={handleImageClick}
           >
-            <Box
-              ref={imageInputRef}
-              component="input"
-              type="file"
-              accept="image/jpeg, image/jpg, image/png"
-              onChange={handleImageChange}
+            <Chip
+              label="Change Image"
+              variant="contained"
+              color="secondary"
               sx={{
-                display: "none",
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+                opacity: 0,
               }}
             />
             <Box
               component="img"
-              src={GalleryIcon}
+              src={URL.createObjectURL(imageFile)}
               sx={{
-                width: "27%",
-                height: "auto",
-                mb: 2,
-                transition: "transform 0.5s",
+                width: "100%",
+                height: "100%",
               }}
             />
-            <Typography>Click to add image</Typography>
+          </Paper>
+        ) : (
+          <Box
+            sx={{
+              bgcolor: "grey.300",
+              height: { xs: "40vw", md: "21vw" },
+              cursor: "pointer",
+              transition: "background-color 0.5s",
+              p: 1.5,
+              "&:hover": {
+                bgcolor: "grey.400",
+              },
+              borderRadius: 3,
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                width: "100%",
+                height: "100%",
+                backgroundImage: `url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='15' ry='15' stroke='white' stroke-width='5' stroke-dasharray='6%2c 15' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+            border-radius: 15px;`,
 
-            <Typography fontSize={10} color="grey.500">
-              Max file size:{" "}
-              <Typography component="span" fontSize="inherit" color="grey.600" fontWeight={600}>
-                5MB
-              </Typography>
-            </Typography>
+                "&:hover img": {
+                  transform: "scale(1.12)",
+                },
+              }}
+              onClick={handleImageClick}
+            >
+              <Box
+                component="img"
+                src={GalleryIcon}
+                sx={{
+                  width: "27%",
+                  height: "auto",
+                  mb: 2,
+                  transition: "transform 0.5s",
+                }}
+              />
+              <Typography>Click to add image</Typography>
 
-            <Typography fontSize={10} color="grey.500">
-              Supported file types:
-              <Typography component="span" fontSize="inherit" color="grey.600" fontWeight={600}>
-                JPG, JPEG, PNG
+              <Typography fontSize={10} color="grey.500">
+                Max file size:{" "}
+                <Typography
+                  component="span"
+                  fontSize="inherit"
+                  color="grey.600"
+                  fontWeight={600}
+                >
+                  5MB
+                </Typography>
               </Typography>
-            </Typography>
+
+              <Typography fontSize={10} color="grey.500">
+                Supported file types:
+                <Typography
+                  component="span"
+                  fontSize="inherit"
+                  color="grey.600"
+                  fontWeight={600}
+                >
+                  JPG, JPEG, PNG
+                </Typography>
+              </Typography>
+            </Box>
           </Box>
-        </Box>
+        )}
       </Grid>
 
       <Grid item xs={12} md={9}>
