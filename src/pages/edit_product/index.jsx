@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import ProductForm from "../../components/ProductForm";
-import { useGetShirtQuery, useEditShirtMutation } from "../../services/tshirtManagementService";
+import { useGetShirtQuery, useEditShirtMutation, useUploadImageMutation } from "../../services/tshirtManagementService";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function EditProduct() {
   const navigate = useNavigate();
   const {id} = useParams();
   const [editShirt] = useEditShirtMutation();
+  const [uploadImage] = useUploadImageMutation();
   const { data, refetch } = useGetShirtQuery({id});
 
   const [values, setValues] = useState({
@@ -18,6 +19,8 @@ export default function EditProduct() {
     unitPrice: 0,
     category: null,
   });
+
+  const [file, setFile] = useState(null);
 
   const handleChange = (e) => {
     setValues({...values, [e.target.id]: e.target.value});
@@ -36,7 +39,22 @@ export default function EditProduct() {
     model.categoryId = category.id;
 
     editShirt({id, model}).then((resp) => {
-      navigate("/main");
+
+      //Upload Image
+      const formData = new FormData();
+      const renamedFile = new File([file], id, {
+        type: file.type,
+      });
+
+      formData.append("image", renamedFile);
+
+      uploadImage(formData).then(resp2 => {
+        navigate("/main");
+      })
+      .catch((err) => {
+        console.err(err);
+      });
+
     })
     .catch((err) => {
       console.error(err);
@@ -47,12 +65,41 @@ export default function EditProduct() {
     navigate("/main");
   };
 
+  const urlToFile = async (url) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+
+      const filename = url.substring(url.lastIndexOf('/') + 1);
+  
+      const file = new File([blob], filename, { type: blob.type });
+  
+      return file;
+    } catch (error) {
+      console.error('Error converting URL to File:', error);
+      return null;
+    }
+  }
+
+  const handleImageChange = (file) => {
+    setFile(file);
+  }
+
   useEffect(() => {
     refetch();
   }, [id]);
 
   useEffect(() => {
     if(!data) return;
+
+    urlToFile(data.productImageUrl)
+    .then(file => {
+      if (file) {
+        setFile(file);
+      } else {
+        console.log('Failed to create file from URL.');
+      }
+    });
 
     setValues(data);
 
@@ -63,7 +110,9 @@ export default function EditProduct() {
       title="Edit product"
       submitLabel="Update"
       values={values}
+      imageFile={file}
       onChange={handleChange}
+      onImageChange={handleImageChange}
       onAutoCompleteChange={handleAutocompleteChange}
       onSubmit={handleSubmit}
       onCancel={handleCancel}

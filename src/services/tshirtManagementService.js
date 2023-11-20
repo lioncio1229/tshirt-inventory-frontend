@@ -38,6 +38,12 @@ const tshirtManagementApi = emptySplitApi.injectEndpoints({
                 method: "POST",
                 body: model,
             })
+        }),
+        deleteImage: builder.mutation({
+            query: (id) => ({
+                url: `api/v1/tshirt/image/${id}`,
+                method: "DELETE",
+            })
         })
     })
 });
@@ -50,4 +56,5 @@ export const {
     useEditShirtMutation,
     useDeleteShirtMutation,
     useUploadImageMutation,
+    useDeleteImageMutation,
 } = tshirtManagementApi;

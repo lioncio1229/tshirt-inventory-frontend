@@ -3,7 +3,7 @@ import { Grid, IconButton, Box } from "@mui/material";
 import Overview from "../../components/Overview";
 import {default as MenuBar} from "./Menu";
 import DataTable from "../../components/DataTable";
-import { useGetShirtsQuery, useDeleteShirtMutation } from "../../services/tshirtManagementService";
+import { useGetShirtsQuery, useDeleteShirtMutation, useDeleteImageMutation } from "../../services/tshirtManagementService";
 import { Delete, Edit } from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import CustomDialog from "../../components/CustomDialog";
@@ -13,6 +13,7 @@ export default function Inventory() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const { data, refetch } = useGetShirtsQuery({ pageIndex: pageIndex * rowsPerPage, rowsPerPage });
   const [deleteShirt] = useDeleteShirtMutation();
+  const [deleteImage] = useDeleteImageMutation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(null);
@@ -65,14 +66,21 @@ export default function Inventory() {
     setPageIndex(0);
   };
 
-  const handleProductDelete = () => {
+  const handleProductDelete = async () => {
     if(!id) return;
 
-    deleteShirt(id).then(resp => {
+    try
+    {
+      await deleteImage(id);
+      await deleteShirt(id);
       refetch();
       setId(null);
       setOpen(false);
-    });
+    }
+    catch(err)
+    {
+      console.error(err);
+    }
   }
 
   useEffect(() => {
