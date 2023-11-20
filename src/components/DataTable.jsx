@@ -16,11 +16,12 @@ export default function DataTable({
   onPageChange,
   onRowsPerPageChange,
   total,
+  stickyHeader,
+  sx,
 }) {
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      {
-        withPagination &&
+    <Paper sx={{ width: "100%", overflow: "hidden", ...sx }}>
+      {withPagination && (
         <TablePagination
           rowsPerPageOptions={[10, 20, 50, 100]}
           component="div"
@@ -30,9 +31,9 @@ export default function DataTable({
           onPageChange={onPageChange}
           onRowsPerPageChange={onRowsPerPageChange}
         />
-      }
+      )}
       <TableContainer>
-        <Table stickyHeader>
+        <Table stickyHeader={stickyHeader}>
           <TableHead>
             <TableRow>
               {columns &&
@@ -53,13 +54,12 @@ export default function DataTable({
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={i}>
                     {columns.map((column, j) => {
-                      if(!column.id)
-                      {
+                      if (!column.id) {
                         return (
                           <TableCell key={j} align={column.align}>
                             {column.formatter(row)}
                           </TableCell>
-                        )
+                        );
                       }
 
                       const value = row[column.id];
@@ -75,8 +75,7 @@ export default function DataTable({
           </TableBody>
         </Table>
       </TableContainer>
-      {
-        withPagination &&
+      {withPagination && (
         <TablePagination
           rowsPerPageOptions={[10, 20, 50, 100]}
           component="div"
@@ -86,7 +85,7 @@ export default function DataTable({
           onPageChange={onPageChange}
           onRowsPerPageChange={onRowsPerPageChange}
         />
-      }
+      )}
     </Paper>
   );
 }

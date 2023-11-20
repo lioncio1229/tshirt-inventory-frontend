@@ -36,9 +36,13 @@ export default function ProductSelect({ open, onSelect, onClose }) {
     { id: "color", label: "Color" },
     { id: "unitPrice", label: "Unit Price" },
     { id: "quantityInStock", label: "Quantity in Stock" },
-    { id: "categoryName", label: "Category Name", formatter: (params) => {
-      return params.category.name;
-    }},
+    {
+      id: "categoryName",
+      label: "Category Name",
+      formatter: (params) => {
+        return params.category.name;
+      },
+    },
   ];
 
   const handleCheckboxChange = (itemId) => {
@@ -46,11 +50,11 @@ export default function ProductSelect({ open, onSelect, onClose }) {
   };
 
   const handleSelect = () => {
-    if(!data) return;
+    if (!data) return;
 
-    onSelect(data.find(item => item.id === selectedId));
+    onSelect(data.find((item) => item.id === selectedId));
     onClose();
-  }
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -73,19 +77,31 @@ export default function ProductSelect({ open, onSelect, onClose }) {
         }}
       >
         <Container maxWidth="lg">
-          <Paper sx={{ p: 3, height: "90vh", position: "relative" }}>
+          <Paper sx={{ p: 3, height: "90vh", position: "relative", overflow: "hidden" }}>
             <Stack flexDirection="row" alignItems="center" mb={2} gap={1}>
-                <ProductionQuantityLimits fontSize="large" color="secondary" />
-                <Typography variant="h6" color="primary">Product Select</Typography>
+              <ProductionQuantityLimits fontSize="large" color="secondary" />
+              <Typography variant="h6" color="primary">
+                Product Select
+              </Typography>
             </Stack>
             <Searchbar sx={{ mb: 2 }} />
-            <DataTable columns={columns} rows={data ? data : []} />
+            <DataTable
+              columns={columns}
+              rows={data ? data : []}
+              stickyHeader
+              sx={{
+                height: "calc(100% - 150px)",
+                "& .css-rorn0c-MuiTableContainer-root": {
+                  maxHeight: "100%"
+                }
+              }}
+            />
             <Stack
               gap={2}
               sx={{
                 position: "absolute",
                 bottom: 10,
-                right: 10,
+                right: 20,
                 flexDirection: "row",
               }}
             >
@@ -98,7 +114,12 @@ export default function ProductSelect({ open, onSelect, onClose }) {
               >
                 Select
               </Button>
-              <Button variant="contained" color="error" size="large" onClick={onClose}>
+              <Button
+                variant="contained"
+                color="error"
+                size="large"
+                onClick={onClose}
+              >
                 Back
               </Button>
             </Stack>

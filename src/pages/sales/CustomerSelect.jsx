@@ -45,11 +45,11 @@ export default function CustomerSelect({ open, onSelect, onClose }) {
   };
 
   const handleSelect = () => {
-    if(!data) return;
+    if (!data) return;
 
-    onSelect(data.find(item => item.id === selectedId));
+    onSelect(data.find((item) => item.id === selectedId));
     onClose();
-  }
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -74,17 +74,29 @@ export default function CustomerSelect({ open, onSelect, onClose }) {
         <Container maxWidth="lg">
           <Paper sx={{ p: 3, height: "90vh", position: "relative" }}>
             <Stack flexDirection="row" alignItems="center" mb={2} gap={1}>
-                <Person fontSize="large" color="secondary" />
-                <Typography variant="h6" color="primary">Select Customer</Typography>
+              <Person fontSize="large" color="secondary" />
+              <Typography variant="h6" color="primary">
+                Select Customer
+              </Typography>
             </Stack>
             <Searchbar sx={{ mb: 2 }} />
-            <DataTable columns={columns} rows={data ? data : []} />
+            <DataTable
+              columns={columns}
+              rows={data ? data : []}
+              stickyHeader
+              sx={{
+                height: "calc(100% - 150px)",
+                "& .css-rorn0c-MuiTableContainer-root": {
+                  maxHeight: "100%",
+                },
+              }}
+            />
             <Stack
               gap={2}
               sx={{
                 position: "absolute",
                 bottom: 10,
-                right: 10,
+                right: 20,
                 flexDirection: "row",
               }}
             >
@@ -97,7 +109,12 @@ export default function CustomerSelect({ open, onSelect, onClose }) {
               >
                 Select
               </Button>
-              <Button variant="contained" color="error" size="large" onClick={onClose}>
+              <Button
+                variant="contained"
+                color="error"
+                size="large"
+                onClick={onClose}
+              >
                 Back
               </Button>
             </Stack>
