@@ -4,7 +4,7 @@ const userManagementApi = emptySplitApi.injectEndpoints({
     overrideExisting: false,
     endpoints: (builder) => ({
         getUsers: builder.query({
-            query: () => "/api/v1/users"
+            query: (model) => `/api/v1/users/q?searchByEmail=${model.searchByEmail}`
         }),
         getUser: builder.query({
             query: (payload) => `/api/v1/users/${payload.id}`

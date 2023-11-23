@@ -4,7 +4,7 @@ import { Stack, Button, Typography, IconButton } from "@mui/material";
 import { Edit, Delete, MoreVert } from "@mui/icons-material";
 import { Add } from "@mui/icons-material";
 import { useGetUsersQuery, useDeleteUserMutation } from "../../services/userManagementService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import CustomDialog from "../../components/CustomDialog";
 import { useState } from "react";
@@ -16,7 +16,8 @@ export default function ManageUsers()
     const [id, setId] = useState(null);
 
     const navigate = useNavigate();
-    const {data, refetch} = useGetUsersQuery();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const {data, refetch} = useGetUsersQuery({searchByEmail: searchParams.get("searchByEmail") ?? ""});
 
     const columns = [
         { id: "email", label: "Email" },
@@ -66,6 +67,10 @@ export default function ManageUsers()
         })
     }
 
+    const handleSearchChangeEnd = (value) => {
+        setSearchParams({ searchByEmail: value });
+    };
+
     useEffect(() => {
         refetch();
     }, []);
@@ -80,8 +85,8 @@ export default function ManageUsers()
                 onClose={() => setOpen(false)}
             />
             <Stack spacing={3}>
-                <Stack direction="row" justifyContent="space-between">
-                    <Searchbar />
+                <Stack direction="row" justifyContent="flex-end" gap={2}>
+                    <Searchbar onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search by Email" />
                     <Stack direction="row">
                         <Button
                             variant="contained"
