@@ -100,7 +100,12 @@ export default function Inventory() {
   }, []);
 
   useEffect(() => {
-    setSearchParams({search: productName});
+
+    if(productName.length > 0)
+      setSearchParams({search: productName});
+    else
+      setSearchParams({});
+      
   }, [productName]);
 
   useEffect(() => {
