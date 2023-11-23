@@ -1,17 +1,24 @@
 import { useEffect, useState } from "react";
-import { Grid, IconButton, Box } from "@mui/material";
+import { Grid, IconButton, Box, Stack } from "@mui/material";
 import Overview from "../../components/Overview";
-import {default as MenuBar} from "./Menu";
 import DataTable from "../../components/DataTable";
 import { useGetShirtsQuery, useDeleteShirtMutation, useDeleteImageMutation } from "../../services/tshirtManagementService";
 import { Delete, Edit } from "@mui/icons-material";
-import {useNavigate} from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import CustomDialog from "../../components/CustomDialog";
+import Searchbar from "../../components/Searchbar";
+import OtherActions from "./OtherActions";
 
 export default function Inventory() {
   const [pageIndex, setPageIndex] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const { data, refetch } = useGetShirtsQuery({ pageIndex: pageIndex * rowsPerPage, rowsPerPage });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data, refetch } = useGetShirtsQuery({
+    pageIndex: pageIndex * rowsPerPage,
+    rowsPerPage,
+    searchByName: searchParams.get("search") ?? "",
+  });
+  
   const [deleteShirt] = useDeleteShirtMutation();
   const [deleteImage] = useDeleteImageMutation();
   const navigate = useNavigate();
@@ -83,6 +90,10 @@ export default function Inventory() {
     }
   }
 
+  const handleSearchChangeEnd = (value) => {
+    setSearchParams({search: value});
+  }
+
   useEffect(() => {
     refetch();
   }, [refetch, pageIndex, rowsPerPage]);
@@ -114,7 +125,10 @@ export default function Inventory() {
           />
         </Grid>
         <Grid item xs={12}>
-          <MenuBar />
+          <Stack direction="row" justifyContent="flex-end" gap={2}>
+            <Searchbar onChangeEnd={handleSearchChangeEnd} searchAfter={500} />
+            <OtherActions />
+          </Stack>
         </Grid>
         <Grid item xs={12}>
           {
