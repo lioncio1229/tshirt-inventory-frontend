@@ -12,11 +12,12 @@ import OtherActions from "./OtherActions";
 export default function Inventory() {
   const [pageIndex, setPageIndex] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [productName, setProductName] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const { data, refetch } = useGetShirtsQuery({
     pageIndex: pageIndex * rowsPerPage,
     rowsPerPage,
-    searchByName: searchParams.get("search") ?? "",
+    searchByName: productName,
   });
   
   const [deleteShirt] = useDeleteShirtMutation();
@@ -91,8 +92,16 @@ export default function Inventory() {
   }
 
   const handleSearchChangeEnd = (value) => {
-    setSearchParams({search: value});
+    setProductName(value);
   }
+
+  useEffect(() => {
+    setProductName(searchParams.get("search") ?? "");
+  }, []);
+
+  useEffect(() => {
+    setSearchParams({search: productName});
+  }, [productName]);
 
   useEffect(() => {
     refetch();
@@ -126,7 +135,7 @@ export default function Inventory() {
         </Grid>
         <Grid item xs={12}>
           <Stack direction="row" justifyContent="flex-end" gap={2}>
-            <Searchbar onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search Name" />
+            <Searchbar value={productName} onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search Name" />
             <OtherActions />
           </Stack>
         </Grid>
