@@ -14,10 +14,11 @@ export default function ManageUsers()
     const [deleteUser] = useDeleteUserMutation();
     const [open, setOpen] = useState(false);
     const [id, setId] = useState(null);
+    const [email, setEmail] = useState("");
 
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-    const {data, refetch} = useGetUsersQuery({searchByEmail: searchParams.get("searchByEmail") ?? ""});
+    const {data, refetch} = useGetUsersQuery({searchByEmail: email});
 
     const columns = [
         { id: "email", label: "Email" },
@@ -68,12 +69,21 @@ export default function ManageUsers()
     }
 
     const handleSearchChangeEnd = (value) => {
-        setSearchParams({ searchByEmail: value });
+        setEmail(value);
     };
 
     useEffect(() => {
+        setEmail(searchParams.get("searchByEmail") ?? "");
+        
         refetch();
     }, []);
+
+    useEffect(() => {
+        if(email.length > 0)
+            setSearchParams({ searchByEmail: email });
+        else
+            setSearchParams({});
+    }, [email]);
 
     return (
         <>
@@ -86,7 +96,7 @@ export default function ManageUsers()
             />
             <Stack spacing={3}>
                 <Stack direction="row" justifyContent="flex-end" gap={2}>
-                    <Searchbar onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search Email" />
+                    <Searchbar value={email} onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search Email" />
                     <Stack direction="row">
                         <Button
                             variant="contained"
