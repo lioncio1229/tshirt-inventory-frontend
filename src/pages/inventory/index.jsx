@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { Grid, IconButton, Box, Stack } from "@mui/material";
 import Overview from "../../components/Overview";
 import DataTable from "../../components/DataTable";
-import { useGetShirtsQuery, useDeleteShirtMutation, useDeleteImageMutation } from "../../services/tshirtManagementService";
+import {
+  useGetShirtsQuery,
+  useDeleteShirtMutation,
+  useDeleteImageMutation,
+} from "../../services/tshirtManagementService";
 import { Delete, Edit } from "@mui/icons-material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CustomDialog from "../../components/CustomDialog";
@@ -28,14 +32,19 @@ export default function Inventory() {
 
   const columns = [
     {
-      label: "Image", formatter: (params) => {
+      label: "Image",
+      formatter: (params) => {
         return (
-          <Box component="img" src={params.productImageUrl} sx={{
-            width: 80,
-            height: "auto",
-          }} />
-        )
-      }
+          <Box
+            component="img"
+            src={params.productImageUrl}
+            sx={{
+              width: 80,
+              height: "auto",
+            }}
+          />
+        );
+      },
     },
     { id: "name", label: "Name" },
     { id: "design", label: "Design" },
@@ -43,26 +52,37 @@ export default function Inventory() {
     { id: "color", label: "Color" },
     { id: "unitPrice", label: "Unit Price" },
     { id: "quantityInStock", label: "Quantity in Stock" },
-    { id: "categoryName", label: "Category Name", formatter: (params) => {
-      return params.category.name;
-    }},
-    {label: "Actions", formatter: (params) => {
-      return (
+    {
+      id: "categoryName",
+      label: "Category Name",
+      formatter: (params) => {
+        return params.category.name;
+      },
+    },
+    {
+      label: "Actions",
+      formatter: (params) => {
+        return (
           <>
-          <IconButton onClick={() => {
-             navigate(`edit-product/${params.id}`);
-          }}>
+            <IconButton
+              onClick={() => {
+                navigate(`edit-product/${params.id}`);
+              }}
+            >
               <Edit color="secondary" />
-          </IconButton>
-          <IconButton onClick={() => {
-              setOpen(true);
-              setId(params.id);
-          }}>
-              <Delete color="error"/>
-          </IconButton>
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                setOpen(true);
+                setId(params.id);
+              }}
+            >
+              <Delete color="error" />
+            </IconButton>
           </>
-      )
-  }}
+        );
+      },
+    },
   ];
 
   const handleChangePage = (event, newPage) => {
@@ -75,37 +95,30 @@ export default function Inventory() {
   };
 
   const handleProductDelete = async () => {
-    if(!id) return;
+    if (!id) return;
 
-    try
-    {
+    try {
       await deleteImage(id);
       await deleteShirt(id);
       refetch();
       setId(null);
       setOpen(false);
-    }
-    catch(err)
-    {
+    } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   const handleSearchChangeEnd = (value) => {
     setProductName(value);
-  }
+  };
 
   useEffect(() => {
     setProductName(searchParams.get("search") ?? "");
   }, []);
 
   useEffect(() => {
-
-    if(productName.length > 0)
-      setSearchParams({search: productName});
-    else
-      setSearchParams({});
-      
+    if (productName.length > 0) setSearchParams({ search: productName });
+    else setSearchParams({});
   }, [productName]);
 
   useEffect(() => {
@@ -127,7 +140,7 @@ export default function Inventory() {
             overviews={[
               {
                 label: "Total T-shirt",
-                value: 100,
+                value: data ? data.total : "--",
                 sx: { bgcolor: "#f07b53" },
               },
               {
@@ -140,26 +153,28 @@ export default function Inventory() {
         </Grid>
         <Grid item xs={12}>
           <Stack direction="row" justifyContent="flex-end" gap={2}>
-            <Searchbar value={productName} onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search Name" />
+            <Searchbar
+              value={productName}
+              onChangeEnd={handleSearchChangeEnd}
+              searchAfter={500}
+              placeholder="Search Name"
+            />
             <OtherActions />
           </Stack>
         </Grid>
         <Grid item xs={12}>
-          {
-              data && 
-            data && 
-              data && 
-              <DataTable
-                columns={columns}
-                withPagination={true}
-                rows={data.tshirts}
-                pageIndex={pageIndex}
-                rowsPerPage={rowsPerPage}
-                total={data.total}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-          }
+          {data && data && data && (
+            <DataTable
+              columns={columns}
+              withPagination={true}
+              rows={data.tshirts}
+              pageIndex={pageIndex}
+              rowsPerPage={rowsPerPage}
+              total={data.totalQuery}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          )}
         </Grid>
       </Grid>
     </>

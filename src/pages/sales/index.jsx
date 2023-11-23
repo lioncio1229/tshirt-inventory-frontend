@@ -190,7 +190,7 @@ export default function Sales() {
           <Grid item xs={6}>
             <StatCard
               label="Total Sales"
-              value={30}
+              value={data && data.length}
               sx={{
                 bgcolor: "success.light",
                 maxWidth: 200,
