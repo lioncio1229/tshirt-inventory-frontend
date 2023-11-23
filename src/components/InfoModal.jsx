@@ -1,7 +1,7 @@
 import { Box, Button, Typography, Modal, Grid } from "@mui/material";
 
 export default function InfoModal({ title, info={}, open, onClose }) {
-  console.log('info: ', info)
+
   return (
     <Modal
       open={open}

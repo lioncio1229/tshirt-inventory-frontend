@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState, useEffect } from "react";
 import StatCard from "../../components/StatCard";
 import {
   Button,
@@ -24,13 +24,17 @@ import CreateOrder from "./CreateOrder";
 import { useSearchParams } from "react-router-dom";
 
 export default function Sales() {
-  const [currentStatus, setCurrentStatus] = useState(1);
   const [infoOpen, setInfoOpen] = useState(false);
   const [customer, setCustomer] = useState({});
+  const [currentStatus, setCurrentStatus] = useState(5);
+  const [productId, setProductId] = useState("");
+
   const [searchParams, setSearchParams] = useSearchParams();
   const { data, refetch } = useGetTshirtOrdersQuery({
-    searchByProductId: searchParams.get("searchByProductId") ?? "",
+    searchByProductId: productId,
+    statusId: currentStatus,
   });
+
   const [updateStatus] = useUpdateOrderStatusMutation();
   const [createOrder] = useCreateOrderMutation();
   const [createOrderOpen, setCreateOrderOpen] = useState(false);
@@ -40,6 +44,7 @@ export default function Sales() {
     { id: 2, label: "Processed" },
     { id: 3, label: "Shipped" },
     { id: 4, label: "Delivered" },
+    { id: 5, label: "All" },
   ];
 
   const columns = [
@@ -158,8 +163,25 @@ export default function Sales() {
   };
 
   const handleSearchChangeEnd = (value) => {
-    setSearchParams({ searchByProductId: value });
+    setProductId(value);
   };
+
+  useEffect(() => {
+    const query = {};
+
+    if(productId.length > 0) 
+      query["searchByProductId"] = productId;
+
+    query["statusId"] = currentStatus;
+
+    setSearchParams(query);
+    refetch();
+  }, [productId, currentStatus]);
+
+  useEffect(() => {
+    setProductId(searchParams.get("searchByProductId") ?? "");
+    setCurrentStatus(searchParams.get("statusId") ?? 5);
+  }, []);
 
   return (
     <>
@@ -196,7 +218,7 @@ export default function Sales() {
           </Grid>
         </Grid>
         <Stack direction="row" justifyContent="flex-end" spacing={2}>
-          <Searchbar onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search Product Id" />
+          <Searchbar value={productId} onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search Product Id" />
           <FormControl sx={{ minWidth: 200 }}>
             <InputLabel id="demo-simple-select-label">Filter</InputLabel>
             <Select
