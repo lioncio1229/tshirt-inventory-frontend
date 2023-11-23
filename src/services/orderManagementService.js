@@ -4,7 +4,7 @@ const orderManagementApi = emptySplitApi.injectEndpoints({
     overrideExisting: false,
     endpoints: (builder) => ({
         getTshirtOrders: builder.query({
-            query: () => "api/v1/tshirtorders"
+            query: (model) => `api/v1/tshirtorders/q?searchByProductId=${model.searchByProductId}`
         }),
         updateOrderStatus: builder.mutation({
             query: (payload) => ({

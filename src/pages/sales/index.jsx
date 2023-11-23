@@ -21,12 +21,16 @@ import {
 } from "../../services/orderManagementService";
 import InfoModal from "../../components/InfoModal";
 import CreateOrder from "./CreateOrder";
+import { useSearchParams } from "react-router-dom";
 
 export default function Sales() {
   const [currentStatus, setCurrentStatus] = useState(1);
   const [infoOpen, setInfoOpen] = useState(false);
   const [customer, setCustomer] = useState({});
-  const { data, refetch } = useGetTshirtOrdersQuery();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data, refetch } = useGetTshirtOrdersQuery({
+    searchByProductId: searchParams.get("searchByProductId") ?? "",
+  });
   const [updateStatus] = useUpdateOrderStatusMutation();
   const [createOrder] = useCreateOrderMutation();
   const [createOrderOpen, setCreateOrderOpen] = useState(false);
@@ -140,18 +144,22 @@ export default function Sales() {
         tshirtRequests: [
           {
             tshirtId: product.id,
-            quantity: quantity
-          }
-        ]
-      }
-    }
+            quantity: quantity,
+          },
+        ],
+      },
+    };
 
-    createOrder(payload).then(resp => {
+    createOrder(payload).then((resp) => {
       console.log("Order Created!");
       refetch();
       setCreateOrderOpen(false);
     });
-  }
+  };
+
+  const handleSearchChangeEnd = (value) => {
+    setSearchParams({ searchByProductId: value });
+  };
 
   return (
     <>
@@ -188,7 +196,7 @@ export default function Sales() {
           </Grid>
         </Grid>
         <Stack direction="row" justifyContent="flex-end" spacing={2}>
-          <Searchbar />
+          <Searchbar onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search by Product Id" />
           <FormControl sx={{ minWidth: 200 }}>
             <InputLabel id="demo-simple-select-label">Filter</InputLabel>
             <Select

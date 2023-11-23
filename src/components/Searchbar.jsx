@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Stack, TextField, InputAdornment } from "@mui/material"
 import { Search } from "@mui/icons-material";
 
-export default function Searchbar({onChangeEnd, searchAfter=1000, sx}) {
+export default function Searchbar({onChangeEnd, searchAfter=1000, placeholder="Search", sx}) {
   const valueRef = useRef(null);
   const [value, setValue] = useState("");
 
@@ -29,7 +29,7 @@ export default function Searchbar({onChangeEnd, searchAfter=1000, sx}) {
 
   return (
     <Stack direction="row" spacing={2} sx={{...sx}}>
-      <TextField size="small" value={value} onChange={handleOnChange} placeholder="Search" InputProps={{
+      <TextField size="small" value={value} onChange={handleOnChange} placeholder={placeholder} InputProps={{
         startAdornment: (
           <InputAdornment position="start">
             <Search/>
