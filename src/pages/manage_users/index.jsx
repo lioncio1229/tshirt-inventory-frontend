@@ -86,7 +86,7 @@ export default function ManageUsers()
             />
             <Stack spacing={3}>
                 <Stack direction="row" justifyContent="flex-end" gap={2}>
-                    <Searchbar onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search by Email" />
+                    <Searchbar onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search Email" />
                     <Stack direction="row">
                         <Button
                             variant="contained"

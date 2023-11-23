@@ -126,7 +126,7 @@ export default function Inventory() {
         </Grid>
         <Grid item xs={12}>
           <Stack direction="row" justifyContent="flex-end" gap={2}>
-            <Searchbar onChangeEnd={handleSearchChangeEnd} searchAfter={500} />
+            <Searchbar onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search Name" />
             <OtherActions />
           </Stack>
         </Grid>

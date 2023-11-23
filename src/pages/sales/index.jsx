@@ -196,7 +196,7 @@ export default function Sales() {
           </Grid>
         </Grid>
         <Stack direction="row" justifyContent="flex-end" spacing={2}>
-          <Searchbar onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search by Product Id" />
+          <Searchbar onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search Product Id" />
           <FormControl sx={{ minWidth: 200 }}>
             <InputLabel id="demo-simple-select-label">Filter</InputLabel>
             <Select
