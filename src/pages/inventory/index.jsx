@@ -7,11 +7,13 @@ import {
   useDeleteShirtMutation,
   useDeleteImageMutation,
 } from "../../services/tshirtManagementService";
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit, Inventory2 } from "@mui/icons-material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CustomDialog from "../../components/CustomDialog";
 import Searchbar from "../../components/Searchbar";
 import OtherActions from "./OtherActions";
+
+import QuantityManager from "./QuantityManager";
 
 export default function Inventory() {
   const [pageIndex, setPageIndex] = useState(0);
@@ -27,8 +29,10 @@ export default function Inventory() {
   const [deleteShirt] = useDeleteShirtMutation();
   const [deleteImage] = useDeleteImageMutation();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openQuantityEditor, setOpenQuantityEditor] = useState(false);
   const [id, setId] = useState(null);
+  const [product, setProduct] = useState(null);
 
   const columns = [
     {
@@ -66,6 +70,14 @@ export default function Inventory() {
           <>
             <IconButton
               onClick={() => {
+                setProduct(params);
+                setOpenQuantityEditor(true);
+              }}
+            >
+              <Inventory2 color="secondary" />
+            </IconButton>
+            <IconButton
+              onClick={() => {
                 navigate(`edit-product/${params.id}`);
               }}
             >
@@ -73,7 +85,7 @@ export default function Inventory() {
             </IconButton>
             <IconButton
               onClick={() => {
-                setOpen(true);
+                setOpenDeleteDialog(true);
                 setId(params.id);
               }}
             >
@@ -102,7 +114,7 @@ export default function Inventory() {
       await deleteShirt(id);
       refetch();
       setId(null);
-      setOpen(false);
+      setOpenDeleteDialog(false);
     } catch (err) {
       console.error(err);
     }
@@ -128,12 +140,22 @@ export default function Inventory() {
   return (
     <>
       <CustomDialog
-        open={open}
+        open={openDeleteDialog}
         description="This action will delete the product. Do you want to proceed?"
         icon={<Delete color="error" fontSize={"large"} />}
         onConfirm={handleProductDelete}
-        onClose={() => setOpen(false)}
+        onClose={() => setOpenDeleteDialog(false)}
       />
+      {
+        product &&
+        <QuantityManager
+          open={openQuantityEditor}
+          productImage={product.productImageUrl}
+          productQuantity={product.quantityInStock}
+          productName={product.name}
+          onClose={() => setOpenQuantityEditor(false)}
+        />
+      }
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Overview
