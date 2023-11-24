@@ -31,7 +31,8 @@ export default function Main() {
       },
       {
         label: "Report",
-        isEnabled: false,
+        pathName: "/main/reports",
+        roles: ["admin", "report"],
       },
       {
         label: "Manage Users",

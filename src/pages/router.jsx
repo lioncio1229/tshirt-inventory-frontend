@@ -10,6 +10,7 @@ import AddUser from "./add_user";
 import EditUser from "./edit_user";
 import Sales from "./sales";
 import ProhibitedPage from "../components/ProhibitedPage";
+import Reports from "./reports";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
       {
         path: "manage-users",
         element: <ManageUsers />
+      },
+      {
+        path: "reports",
+        element: <Reports />
       },
       {
         path: "manage-users/add",
