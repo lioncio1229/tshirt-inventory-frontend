@@ -6,6 +6,7 @@ import {
   useGetShirtsQuery,
   useDeleteShirtMutation,
   useDeleteImageMutation,
+  useUpdateQuantityMutation,
 } from "../../services/tshirtManagementService";
 import { Delete, Edit, Inventory2 } from "@mui/icons-material";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -28,6 +29,7 @@ export default function Inventory() {
   
   const [deleteShirt] = useDeleteShirtMutation();
   const [deleteImage] = useDeleteImageMutation();
+  const [updateQuantity] = useUpdateQuantityMutation();
   const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openQuantityEditor, setOpenQuantityEditor] = useState(false);
@@ -120,6 +122,21 @@ export default function Inventory() {
     }
   };
 
+  const handleQuantityUpdate = (newQuantity) => {
+    const payload = {
+      id: product.id,
+      model: {
+        quantity: newQuantity
+      },
+    };
+
+    updateQuantity(payload).then(resp => {
+      refetch();
+      setProduct(null);
+      setOpenQuantityEditor(false);
+    })
+  }
+
   const handleSearchChangeEnd = (value) => {
     setProductName(value);
   };
@@ -153,6 +170,7 @@ export default function Inventory() {
           productImage={product.productImageUrl}
           productQuantity={product.quantityInStock}
           productName={product.name}
+          onQuantityUpdate={handleQuantityUpdate}
           onClose={() => setOpenQuantityEditor(false)}
         />
       }

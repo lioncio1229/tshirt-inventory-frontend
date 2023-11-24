@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Modal,
   Button,
@@ -17,9 +18,27 @@ export default function QuantityManager({
   productImage,
   productName,
   productQuantity,
-  onUpdate,
+  onQuantityUpdate,
   onClose,
 }) {
+
+  const [quantity, setQuantity] = useState(0);
+  const [input, setInput] = useState(0);
+
+  const add = () => {
+    setQuantity(quantity + input);
+    setInput(0);
+  }
+  
+  const remove = () => {
+    setQuantity(quantity - input);
+    setInput(0);
+  }
+
+  useEffect(() => {
+    setQuantity(productQuantity);
+  }, [productQuantity]);
+
   return (
     <Modal
       open={open}
@@ -36,7 +55,7 @@ export default function QuantityManager({
         }}
       >
         <Container maxWidth="xs">
-          <Paper sx={{ p: 3 }}>
+          <Paper sx={{ p: 2.3 }}>
             <Stack spacing={3}>
               <Typography variant="h5" fontWeight="600" color="primary">
                 Update Quantity
@@ -53,14 +72,14 @@ export default function QuantityManager({
                   />
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography fontWeight="600" mb={2}>
+                  <Typography fontWeight="600" mb={1.2}>
                     {productName}
                   </Typography>
                   <Typography fontSize={12} color="grey.700">
                     Current Quantity
                   </Typography>
                   <Typography fontWeight="600" fontSize={20} color="secondary">
-                    {productQuantity}
+                    {quantity}
                   </Typography>
                 </Grid>
               </Grid>
@@ -77,12 +96,15 @@ export default function QuantityManager({
                       },
                   }}
                   fullWidth
+                  value={input}
+                  onChange={(e) => setInput(parseInt(e.target.value))}
                 />
                 <Button
                   sx={{ textTransform: "capitalize", height: "100%" }}
                   fullWidth
                   startIcon={<Add />}
                   variant="outlined"
+                  onClick={add}
                 >
                   Add
                 </Button>
@@ -92,6 +114,7 @@ export default function QuantityManager({
                   startIcon={<Remove />}
                   color="error"
                   variant="outlined"
+                  onClick={remove}
                 >
                   Remove
                 </Button>
@@ -103,6 +126,7 @@ export default function QuantityManager({
                     variant="contained"
                     size="large"
                     fullWidth
+                    onClick={() => onQuantityUpdate && onQuantityUpdate(quantity)}
                   >
                     Update
                   </Button>
@@ -113,6 +137,7 @@ export default function QuantityManager({
                     size="large"
                     color="error"
                     fullWidth
+                    onClick={onClose}
                   >
                     Cancel
                   </Button>
