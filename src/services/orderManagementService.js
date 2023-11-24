@@ -19,7 +19,13 @@ const orderManagementApi = emptySplitApi.injectEndpoints({
                 method: "POST",
                 body: payload.model,
             })
-        })
+        }),
+        getSaleSummary: builder.query({
+            query: () => "api/v1/tshirtorders/salesummary"
+        }),
+        getSaleSummaryTrigger: builder.mutation({
+            query: () => "api/v1/tshirtorders/salesummary"
+        }),
     })
 });
 
@@ -27,4 +33,6 @@ export const {
     useGetTshirtOrdersQuery,
     useUpdateOrderStatusMutation,
     useCreateOrderMutation,
+    useGetSaleSummaryQuery,
+    useGetSaleSummaryTriggerMutation,
 } = orderManagementApi;
