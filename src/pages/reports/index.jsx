@@ -16,17 +16,30 @@ import {
   useGetSummaryQuery,
   useGetTopProductsQuery,
 } from "../../services/analyticsService";
+import { useNavigate } from "react-router-dom";
 
 export default function Reports() {
-  const { data: summary, isFetching, refetch: refetchSummary } = useGetSummaryQuery();
-  const { data: topProducts, isFetching: isFetchingTopProducts, refetch: refetchTopProducts } =
-    useGetTopProductsQuery();
+  const {
+    data: summary,
+    isFetching,
+    refetch: refetchSummary,
+  } = useGetSummaryQuery();
+  const {
+    data: topProducts,
+    isFetching: isFetchingTopProducts,
+    refetch: refetchTopProducts,
+  } = useGetTopProductsQuery();
 
+  const navigate = useNavigate();
 
-useEffect(() => {
+  const searchProductInInventory = (name) => {
+    navigate(`/main?search=${name}`);
+  }
+
+  useEffect(() => {
     refetchSummary();
     refetchTopProducts();
-}, []);
+  }, []);
 
   return (
     <>
@@ -65,11 +78,12 @@ useEffect(() => {
                   <ListItem key={i} sx={{ p: 0, pb: 2, color: "grey.800" }}>
                     <ListItemText primary={`${i + 1}. ${item.tshirt.name}`} />
                     <Button
-                      sx={{ textTransform: "capitalize" }}
+                      sx={{ textTransform: "capitalize", fontSize: 11 }}
                       variant="outlined"
                       size="small"
+                      onClick={() => searchProductInInventory(item.tshirt.name)}
                     >
-                      View in inventory
+                      Search in inventory
                     </Button>
                   </ListItem>
                 ))}
