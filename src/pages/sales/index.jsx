@@ -33,7 +33,7 @@ export default function Sales() {
   const [productId, setProductId] = useState("");
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data, refetch, isFetching } = useGetTshirtOrdersQuery({
+  const { data, refetch, isLoading: isLoadingTshirtOrders } = useGetTshirtOrdersQuery({
     searchByProductId: productId,
     statusId: currentStatus,
   });
@@ -212,7 +212,6 @@ export default function Sales() {
       <Stack spacing={3}>
         <SaleSummary
           data={saleSummaryData}
-          isFetching={isSaleSummaryFetching}
         />
         {data ? (
           <Stack direction="row" justifyContent="flex-end" spacing={2}>
@@ -268,7 +267,7 @@ export default function Sales() {
         )}
 
         {
-          data ?
+          !isLoadingTshirtOrders && data ?
             <DataTable columns={columns} rows={data} />
           : 
           <Skeleton

@@ -1,10 +1,10 @@
 import { Stack, Skeleton } from "@mui/material";
 import StatCard from "../../components/StatCard";
 
-export default function SaleSummary({ data, isFetching }) {
+export default function SaleSummary({ data }) {
   return (
     <>
-      {!isFetching && data ? (
+      {data ? (
         <Stack flexDirection="row" gap={2}>
           <StatCard
             label="Queue"
