@@ -1,7 +1,7 @@
 import Searchbar from "../../components/Searchbar";
 import DataTable from "../../components/DataTable";
-import { Stack, Button, Typography, IconButton } from "@mui/material";
-import { Edit, Delete, MoreVert } from "@mui/icons-material";
+import { Stack, Button, Typography, IconButton, Skeleton } from "@mui/material";
+import { Edit, Delete } from "@mui/icons-material";
 import { Add } from "@mui/icons-material";
 import { useGetUsersQuery, useDeleteUserMutation } from "../../services/userManagementService";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -18,7 +18,7 @@ export default function ManageUsers()
 
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-    const {data, refetch} = useGetUsersQuery({searchByEmail: email});
+    const { data, refetch, isLoading, isFetching } = useGetUsersQuery({searchByEmail: email});
 
     const columns = [
         { id: "email", label: "Email" },
@@ -95,22 +95,33 @@ export default function ManageUsers()
                 onClose={() => setOpen(false)}
             />
             <Stack spacing={3}>
-                <Stack direction="row" justifyContent="flex-end" gap={2}>
-                    <Searchbar value={email} onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search Email" />
-                    <Stack direction="row">
-                        <Button
-                            variant="contained"
-                            startIcon={<Add />}
-                            onClick={handleAddUser}
-                        >
-                            Add User
-                        </Button>
+                {
+                    !isLoading ?
+                    <Stack direction="row" justifyContent="flex-end" gap={2}>
+                        <Searchbar value={email} onChangeEnd={handleSearchChangeEnd} searchAfter={500} placeholder="Search Email" />
+                        <Stack direction="row">
+                            <Button
+                                variant="contained"
+                                startIcon={<Add />}
+                                onClick={handleAddUser}
+                            >
+                                Add User
+                            </Button>
+                        </Stack>
                     </Stack>
-                </Stack>
-                <DataTable 
-                    columns={columns}
-                    rows={data}
-                />
+                    : <Stack direction="row" justifyContent="flex-end" gap={2}>
+                        <Skeleton variant="rectangular" animation="wave" width={400} height={40} />
+                    </Stack>
+                }
+                {
+                    !isFetching && data ?
+                    <DataTable 
+                        columns={columns}
+                        rows={data}
+                    />
+                    : 
+                    <Skeleton variant="rectangular" animation="wave" width="100%" height="70vh" />
+                }
             </Stack>
         </>
     )
