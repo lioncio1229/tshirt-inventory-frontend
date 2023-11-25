@@ -64,7 +64,7 @@ export default function DataTable({
 
                       const value = row[column.id];
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell key={j} align={column.align}>
                           {column.formatter ? column.formatter(row) : value}
                         </TableCell>
                       );
