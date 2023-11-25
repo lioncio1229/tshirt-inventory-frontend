@@ -2,18 +2,9 @@ import { Stack, Skeleton } from "@mui/material";
 import StatCard from "../../components/StatCard";
 
 export default function SaleSummary({ data, isFetching }) {
-
   return (
     <>
-      {isFetching ? (
-        <Stack flexDirection="row" gap={2}>
-            <Skeleton variant="rectangular" animation="wave" width={200} height={95}/>
-            <Skeleton variant="rectangular" animation="wave" width={200} height={95}/>
-            <Skeleton variant="rectangular" animation="wave" width={200} height={95}/>
-            <Skeleton variant="rectangular" animation="wave" width={200} height={95}/>
-            <Skeleton variant="rectangular" animation="wave" width={200} height={95}/>
-        </Stack>
-      ) : (
+      {!isFetching && data ? (
         <Stack flexDirection="row" gap={2}>
           <StatCard
             label="Queue"
@@ -54,6 +45,39 @@ export default function SaleSummary({ data, isFetching }) {
               bgcolor: "success.light",
               maxWidth: 200,
             }}
+          />
+        </Stack>
+      ) : (
+        <Stack flexDirection="row" gap={2}>
+          <Skeleton
+            variant="rectangular"
+            animation="wave"
+            width={200}
+            height={95}
+          />
+          <Skeleton
+            variant="rectangular"
+            animation="wave"
+            width={200}
+            height={95}
+          />
+          <Skeleton
+            variant="rectangular"
+            animation="wave"
+            width={200}
+            height={95}
+          />
+          <Skeleton
+            variant="rectangular"
+            animation="wave"
+            width={200}
+            height={95}
+          />
+          <Skeleton
+            variant="rectangular"
+            animation="wave"
+            width={200}
+            height={95}
           />
         </Stack>
       )}

@@ -21,7 +21,7 @@ export default function Inventory() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [productName, setProductName] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data, refetch, isFetching } = useGetShirtsQuery({
+  const { data, refetch, isFetching, isLoading } = useGetShirtsQuery({
     pageIndex: pageIndex * rowsPerPage,
     rowsPerPage,
     searchByName: productName,
@@ -177,7 +177,7 @@ export default function Inventory() {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           {
-            !isFetching && data ? 
+            data ? 
             <Overview
               overviews={[
                 {
@@ -197,7 +197,7 @@ export default function Inventory() {
         </Grid>
         <Grid item xs={12}>
           {
-            !isFetching && data ? 
+            !isLoading && data ? 
             <Stack direction="row" justifyContent="flex-end" gap={2}>
               <Searchbar
                 value={productName}

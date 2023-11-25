@@ -8,6 +8,7 @@ import {
   MenuItem,
   InputAdornment,
   IconButton,
+  Skeleton,
 } from "@mui/material";
 import { Add, FilterAlt, Info } from "@mui/icons-material";
 import Searchbar from "../../components/Searchbar";
@@ -32,12 +33,16 @@ export default function Sales() {
   const [productId, setProductId] = useState("");
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data, refetch } = useGetTshirtOrdersQuery({
+  const { data, refetch, isFetching } = useGetTshirtOrdersQuery({
     searchByProductId: productId,
     statusId: currentStatus,
   });
-  const {data: saleSummaryData, isFetching: isSaleSummaryFetching, refetch: saleSummaryRefetch } = useGetSaleSummaryQuery();
-  const [ getSaleSummary ] = useGetSaleSummaryTriggerMutation();
+  const {
+    data: saleSummaryData,
+    isFetching: isSaleSummaryFetching,
+    refetch: saleSummaryRefetch,
+  } = useGetSaleSummaryQuery();
+  const [getSaleSummary] = useGetSaleSummaryTriggerMutation();
 
   const [updateStatus] = useUpdateOrderStatusMutation();
   const [createOrder] = useCreateOrderMutation();
@@ -186,67 +191,93 @@ export default function Sales() {
   useEffect(() => {
     setProductId(searchParams.get("searchByProductId") ?? "");
 
-    getSaleSummary().unwrap().then(resp => {
-      let initialStatus;
-      
-      if(resp.queueCount > 0) initialStatus = 1;
-      else if(resp.processedCount > 0) initialStatus = 2;
-      else if(resp.shippedCount > 0) initialStatus = 3;
-      else if(resp.deliveredCount > 0) initialStatus = 4;
-      else initialStatus = 5;
+    getSaleSummary()
+      .unwrap()
+      .then((resp) => {
+        let initialStatus;
 
-      //Is statusId from params is null, use the status value from the first status item with quantity
-      setCurrentStatus(searchParams.get("statusId") ?? initialStatus);
-    });
+        if (resp.queueCount > 0) initialStatus = 1;
+        else if (resp.processedCount > 0) initialStatus = 2;
+        else if (resp.shippedCount > 0) initialStatus = 3;
+        else if (resp.deliveredCount > 0) initialStatus = 4;
+        else initialStatus = 5;
 
+        //Is statusId from params is null, use the status value from the first status item with quantity
+        setCurrentStatus(searchParams.get("statusId") ?? initialStatus);
+      });
   }, []);
 
   return (
     <>
       <Stack spacing={3}>
-        <SaleSummary data={saleSummaryData} isFetching={isSaleSummaryFetching} />
-        <Stack direction="row" justifyContent="flex-end" spacing={2}>
-          <Searchbar
-            value={productId}
-            onChangeEnd={handleSearchChangeEnd}
-            searchAfter={500}
-            placeholder="Search Product Id"
-          />
-          <FormControl sx={{ minWidth: 200 }}>
-            <InputLabel id="demo-simple-select-label">Filter</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={currentStatus}
-              label="Filter"
-              onChange={handleFilterStatusChange}
-              startAdornment={
-                <InputAdornment position="start">
-                  <FilterAlt />
-                </InputAdornment>
-              }
-              size="small"
+        <SaleSummary
+          data={saleSummaryData}
+          isFetching={isSaleSummaryFetching}
+        />
+        {data ? (
+          <Stack direction="row" justifyContent="flex-end" spacing={2}>
+            <Searchbar
+              value={productId}
+              onChangeEnd={handleSearchChangeEnd}
+              searchAfter={500}
+              placeholder="Search Product Id"
+            />
+            <FormControl sx={{ minWidth: 200 }}>
+              <InputLabel id="demo-simple-select-label">Filter</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={currentStatus}
+                label="Filter"
+                onChange={handleFilterStatusChange}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <FilterAlt />
+                  </InputAdornment>
+                }
+                size="small"
+              >
+                {status.map((status) => (
+                  <MenuItem key={status.id} value={status.id}>
+                    {status.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Button
+              variant="contained"
+              startIcon={<Add />}
+              color="secondary"
+              sx={{
+                textTransform: "capitalize",
+              }}
+              onClick={() => setCreateOrderOpen(true)}
             >
-              {status.map((status) => (
-                <MenuItem key={status.id} value={status.id}>
-                  {status.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Button
-            variant="contained"
-            startIcon={<Add />}
-            color="secondary"
-            sx={{
-              textTransform: "capitalize",
-            }}
-            onClick={() => setCreateOrderOpen(true)}
-          >
-            Create Order
-          </Button>
-        </Stack>
-        <DataTable columns={columns} rows={data} />
+              Create Order
+            </Button>
+          </Stack>
+        ) : (
+          <Stack direction="row" justifyContent="flex-end" spacing={2}>
+            <Skeleton
+              variant="rectangular"
+              animation="wave"
+              width={400}
+              height={40}
+            />
+          </Stack>
+        )}
+
+        {
+          data ?
+            <DataTable columns={columns} rows={data} />
+          : 
+          <Skeleton
+              variant="rectangular"
+              animation="wave"
+              width="100%"
+              height={300}
+            />
+        }
       </Stack>
       <InfoModal
         title="Customer Info"
