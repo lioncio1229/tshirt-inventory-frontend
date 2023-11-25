@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Grid, IconButton, Box, Stack } from "@mui/material";
+import { Grid, IconButton, Box, Stack, Skeleton } from "@mui/material";
 import Overview from "../../components/Overview";
 import DataTable from "../../components/DataTable";
 import {
@@ -21,7 +21,7 @@ export default function Inventory() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [productName, setProductName] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data, refetch } = useGetShirtsQuery({
+  const { data, refetch, isFetching } = useGetShirtsQuery({
     pageIndex: pageIndex * rowsPerPage,
     rowsPerPage,
     searchByName: productName,
@@ -176,34 +176,46 @@ export default function Inventory() {
       }
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Overview
-            overviews={[
-              {
-                label: "Total T-shirt",
-                value: data ? data.total : "--",
-                sx: { bgcolor: "#f07b53" },
-              },
-              {
-                label: "Total Categories",
-                value: 3,
-                sx: { bgcolor: "#f4b168" },
-              },
-            ]}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Stack direction="row" justifyContent="flex-end" gap={2}>
-            <Searchbar
-              value={productName}
-              onChangeEnd={handleSearchChangeEnd}
-              searchAfter={500}
-              placeholder="Search Name"
+          {
+            !isFetching && data ? 
+            <Overview
+              overviews={[
+                {
+                  label: "Total T-shirt",
+                  value: data ? data.total : "--",
+                  sx: { bgcolor: "#f07b53" },
+                },
+                {
+                  label: "Total Categories",
+                  value: 3,
+                  sx: { bgcolor: "#f4b168" },
+                },
+              ]}
             />
-            <OtherActions />
-          </Stack>
+            : <Skeleton variant="rectangular" animation="wave" width={400} height={100}/>
+          }
         </Grid>
         <Grid item xs={12}>
-          {data && data && data && (
+          {
+            !isFetching && data ? 
+            <Stack direction="row" justifyContent="flex-end" gap={2}>
+              <Searchbar
+                value={productName}
+                onChangeEnd={handleSearchChangeEnd}
+                searchAfter={500}
+                placeholder="Search Name"
+              />
+              <OtherActions />
+            </Stack>
+            : 
+            <Stack direction="row" justifyContent="flex-end" gap={2}>
+              <Skeleton variant="rectangular" animation="wave" width={200} height={40}/>
+              <Skeleton variant="rectangular" animation="wave" width={150} height={40}/>
+            </Stack>
+          }
+        </Grid>
+        <Grid item xs={12}>
+          {!isFetching && data ? (
             <DataTable
               columns={columns}
               withPagination={true}
@@ -214,7 +226,9 @@ export default function Inventory() {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
-          )}
+          )
+          : <Skeleton variant="rectangular" animation="wave" height={300} />
+        }
         </Grid>
       </Grid>
     </>
