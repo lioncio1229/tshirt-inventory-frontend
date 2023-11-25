@@ -8,6 +8,7 @@ import {
   Stack,
   Chip,
   Paper,
+  Skeleton,
 } from "@mui/material";
 import LabeledInputfield from "./LabeledInputField";
 import GalleryIcon from "../assets/gallery.png";
@@ -23,6 +24,8 @@ export default function ProductForm({
   values = {},
   onSubmit,
   onCancel,
+  isImageLoading,
+  isDataLoading,
 }) {
   const imageInputRef = useRef(null);
 
@@ -44,15 +47,9 @@ export default function ProductForm({
     onImageChange && onImageChange(file);
   };
 
-  return (
-    <Grid container spacing={2} columnSpacing={4}>
-      <Grid item xs={12}>
-        <Typography variant="h5" color="primary">
-          {title}
-        </Typography>
-      </Grid>
-
-      <Grid item xs={6} md={3}>
+  const renderImage = () => {
+    return (
+      <>
         <Box
           ref={imageInputRef}
           component="input"
@@ -166,104 +163,125 @@ export default function ProductForm({
             </Box>
           </Box>
         )}
+      </>
+    )
+  }
+
+  const renderForm = () => (
+    <Grid container spacing={2}>
+    <Grid item xs={12} md={6}>
+      <LabeledInputfield
+        id="name"
+        label="Name"
+        onChange={onChange}
+        value={values.name}
+      />
+    </Grid>
+    <Grid item xs={12} md={6}>
+      <LabeledInputfield
+        id="design"
+        label="Design"
+        onChange={onChange}
+        value={values.design}
+      />
+    </Grid>
+    <Grid item xs={12} md={6}>
+      <LabeledInputfield
+        id="size"
+        label="Size"
+        onChange={onChange}
+        value={values.size}
+      />
+    </Grid>
+    <Grid item xs={12} md={6}>
+      <LabeledInputfield
+        id="color"
+        label="Color"
+        onChange={onChange}
+        value={values.color}
+      />
+    </Grid>
+    <Grid item xs={12} md={6}>
+      <LabeledInputfield
+        id="quantityInStock"
+        type="number"
+        label="Quantity in Stock"
+        onChange={onChange}
+        value={values.quantityInStock}
+      />
+    </Grid>
+    <Grid item xs={12} md={6}>
+      <LabeledInputfield
+        id="unitPrice"
+        type="number"
+        label="Unit Price"
+        onChange={onChange}
+        value={values.unitPrice}
+      />
+    </Grid>
+    <Grid item xs={12} md={6}>
+      <Autocomplete
+        value={values.category}
+        isOptionEqualToValue={(option) =>
+          option.id === values.category.id
+        }
+        getOptionLabel={(option) => option.name}
+        disablePortal
+        options={[
+          { id: 1, name: "Any" },
+          { id: 2, name: "Men" },
+          { id: 3, name: "Women" },
+          { id: 4, name: "Baby" },
+          { id: 5, name: "Teen" },
+          { id: 6, name: "Christmas" },
+        ]}
+        fullWidth
+        renderInput={(params) => (
+          <TextField {...params} label="Category" />
+        )}
+        onChange={onAutoCompleteChange}
+      />
+    </Grid>
+    <Grid item xs={12}>
+      <Stack flexDirection="row" gap={2}>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{ minWidth: 130, textTransform: "capitalize" }}
+          onClick={onSubmit}
+        >
+          {submitLabel}
+        </Button>
+        <Button
+          variant="contained"
+          color="error"
+          sx={{ minWidth: 130, textTransform: "capitalize" }}
+          onClick={onCancel}
+        >
+          Cancel
+        </Button>
+      </Stack>
+    </Grid>
+  </Grid>
+  )
+
+  return (
+    <Grid container spacing={2} columnSpacing={4}>
+      <Grid item xs={12}>
+        <Typography variant="h5" color="primary">
+          {title}
+        </Typography>
+      </Grid>
+
+      <Grid item xs={6} md={3}>
+        {
+          !isImageLoading ? renderImage()
+          : <Skeleton variant="rectangular" animation="wave" width="100%" height="100%" />
+        }
       </Grid>
 
       <Grid item xs={12} md={9}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <LabeledInputfield
-              id="name"
-              label="Name"
-              onChange={onChange}
-              value={values.name}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <LabeledInputfield
-              id="design"
-              label="Design"
-              onChange={onChange}
-              value={values.design}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <LabeledInputfield
-              id="size"
-              label="Size"
-              onChange={onChange}
-              value={values.size}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <LabeledInputfield
-              id="color"
-              label="Color"
-              onChange={onChange}
-              value={values.color}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <LabeledInputfield
-              id="quantityInStock"
-              type="number"
-              label="Quantity in Stock"
-              onChange={onChange}
-              value={values.quantityInStock}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <LabeledInputfield
-              id="unitPrice"
-              type="number"
-              label="Unit Price"
-              onChange={onChange}
-              value={values.unitPrice}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Autocomplete
-              value={values.category}
-              isOptionEqualToValue={(option) =>
-                option.id === values.category.id
-              }
-              getOptionLabel={(option) => option.name}
-              disablePortal
-              options={[
-                { id: 1, name: "Any" },
-                { id: 2, name: "Men" },
-                { id: 3, name: "Women" },
-                { id: 4, name: "Baby" },
-                { id: 5, name: "Teen" },
-                { id: 6, name: "Christmas" },
-              ]}
-              fullWidth
-              renderInput={(params) => (
-                <TextField {...params} label="Category" />
-              )}
-              onChange={onAutoCompleteChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Stack flexDirection="row" gap={2}>
-              <Button
-                variant="contained"
-                color="secondary"
-                sx={{ minWidth: 130, textTransform: "capitalize" }}
-                onClick={onSubmit}
-              >
-                {submitLabel}
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                sx={{ minWidth: 130, textTransform: "capitalize" }}
-                onClick={onCancel}
-              >
-                Cancel
-              </Button>
-            </Stack>
-          </Grid>
-        </Grid>
+        { !isDataLoading ? renderForm() : <Skeleton variant="rectangular" animation="wave" width="100%" height="100%" /> }
       </Grid>
     </Grid>
   );

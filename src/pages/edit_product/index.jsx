@@ -8,7 +8,8 @@ export default function EditProduct() {
   const {id} = useParams();
   const [editShirt] = useEditShirtMutation();
   const [uploadImage] = useUploadImageMutation();
-  const { data, refetch } = useGetShirtQuery({id});
+  const { data, refetch, isLoading } = useGetShirtQuery({id});
+  const [isImageLoading, setImageLoading] = useState(false);
 
   const [values, setValues] = useState({
     name: "",
@@ -92,6 +93,7 @@ export default function EditProduct() {
   useEffect(() => {
     if(!data) return;
 
+    setImageLoading(true);
     urlToFile(data.productImageUrl)
     .then(file => {
       if (file) {
@@ -99,6 +101,7 @@ export default function EditProduct() {
       } else {
         console.log('Failed to create file from URL.');
       }
+      setImageLoading(false);
     });
 
     setValues(data);
@@ -116,6 +119,8 @@ export default function EditProduct() {
       onAutoCompleteChange={handleAutocompleteChange}
       onSubmit={handleSubmit}
       onCancel={handleCancel}
+      isImageLoading={isImageLoading}
+      isDataLoading={isLoading}
     />
   );
 }
