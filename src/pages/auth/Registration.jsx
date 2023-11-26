@@ -1,6 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
@@ -9,11 +8,13 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { useRegisterMutation } from "../../services/authManagementService";
 import { useNavigate } from "react-router-dom";
+import { LoadingButton } from "@mui/lab";
 
 export default function Registration() {
 
   const [register] = useRegisterMutation();
   const navigate = useNavigate();
+  const [isButtonLoading, setButtonLoading] = useState(false);
 
   const [error, setError] = useState({
     emailError: "",
@@ -48,9 +49,15 @@ export default function Registration() {
       password,
     };
 
+    setButtonLoading(true);
     register(model).unwrap().then(resp => {
       localStorage.setItem("token", resp.token);
+      setButtonLoading(false);
       navigate("/main");
+    })
+    .catch(err => {
+      console.err(err);
+      setButtonLoading(false);
     });
   };
 
@@ -211,15 +218,17 @@ export default function Registration() {
             />
           </Grid>
         </Grid>
-        <Button
+        <LoadingButton
           type="submit"
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
           disabled={!isEnabled}
+          loading={isButtonLoading}
+          size="large"
         >
           Register
-        </Button>
+        </LoadingButton>
         <Grid container justifyContent="flex-end">
           <Grid item>
             <Link href="/" variant="body2">

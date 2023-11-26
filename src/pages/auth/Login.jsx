@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
@@ -9,11 +8,13 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { useLoginMutation } from "../../services/authManagementService";
 import { useNavigate } from "react-router-dom";
+import { LoadingButton } from "@mui/lab";
 
 export default function Login() {
 
   const [login] = useLoginMutation();
   const navigate = useNavigate();
+  const [isButtonLoading, setButtonLoading] = useState(false);
 
   const [errorState, setErrorState] = useState({
     emailHasError: true,
@@ -30,11 +31,17 @@ export default function Login() {
       email: data.get("email"),
       password: data.get("password")
     };
-
+    
+    setButtonLoading(true);
     login(model).unwrap().then(resp => {
       localStorage.setItem("token", resp.token);
+      setButtonLoading(false);
       navigate("/main");
-    });
+    })
+    .catch(err => {
+      console.err(err);
+      setButtonLoading(false);
+    })
   };
 
   const handleEmailInputChange = (e) => {
@@ -102,15 +109,17 @@ export default function Login() {
             />
           </Grid>
         </Grid>
-        <Button
+        <LoadingButton
           type="submit"
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
           disabled={!isEnabled}
+          loading={isButtonLoading}
+          size="large"
         >
           Login
-        </Button>
+        </LoadingButton>
         <Grid container justifyContent="flex-end">
           <Grid item>
             <Link href="/register" variant="body2">
