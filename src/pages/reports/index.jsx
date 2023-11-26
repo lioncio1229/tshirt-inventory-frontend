@@ -18,15 +18,22 @@ import {
 } from "../../services/analyticsService";
 import { useNavigate } from "react-router-dom";
 
+import { useDispatch } from "react-redux";
+import { setBarLoading } from "../../globalSlice";
+
 export default function Reports() {
+  const dispatch = useDispatch();
   const {
     data: summary,
     isFetching,
+    isLoading,
     refetch: refetchSummary,
   } = useGetSummaryQuery();
+
   const {
     data: topProducts,
     isFetching: isFetchingTopProducts,
+    isLoading: isLoadingTopProducts,
     refetch: refetchTopProducts,
   } = useGetTopProductsQuery();
 
@@ -35,6 +42,10 @@ export default function Reports() {
   const searchProductInInventory = (name) => {
     navigate(`/main?search=${name}`);
   }
+
+  useEffect(() => {
+    dispatch(setBarLoading(isLoading || isLoadingTopProducts));
+  }, [isLoading, isLoadingTopProducts]);
 
   useEffect(() => {
     refetchSummary();
