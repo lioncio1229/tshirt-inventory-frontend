@@ -10,7 +10,7 @@ export default function Main() {
   const navigate = useNavigate();
   const location = useLocation();
   const [pages, setPages] = useState([]);
-  const isBarLoading = useSelector(state => barLoadingSelector(state));
+  const isBarLoading = useSelector((state) => barLoadingSelector(state));
 
   const handleTabClick = (page) => {
     navigate(page.pathName);
@@ -77,12 +77,19 @@ export default function Main() {
 
   return (
     <>
-    {
-      isBarLoading &&
-      <Box sx={{ width: '100%' }}>
-        <LinearProgress />
-      </Box>
-    }
+      {isBarLoading && (
+        <Box
+          sx={{
+            width: "100%",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            zIndex: "modal",
+          }}
+        >
+          <LinearProgress />
+        </Box>
+      )}
       <Header
         pages={pages}
         currentPathName={removeTrailingSlash(location.pathname)}
