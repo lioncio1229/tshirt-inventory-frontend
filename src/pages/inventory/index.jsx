@@ -19,6 +19,8 @@ import QuantityManager from "./QuantityManager";
 import { useDispatch } from "react-redux";
 import { setBarLoading } from "../../globalSlice";
 
+import { enqueueSnackbar } from 'notistack'
+
 export default function Inventory() {
   const dispatch = useDispatch();
   const [pageIndex, setPageIndex] = useState(0);
@@ -123,8 +125,10 @@ export default function Inventory() {
       refetch();
       setId(null);
       setOpenDeleteDialog(false);
+      enqueueSnackbar("Product was deleted sucessfuly", { variant: "success" });
     } catch (err) {
       console.error(err);
+      enqueueSnackbar("Can't delete product", { variant: "error" });
       dispatch(setBarLoading(false));
     }
   };
@@ -150,6 +154,15 @@ export default function Inventory() {
 
   useEffect(() => {
     dispatch(setBarLoading(isLoading));
+
+    if(!isLoading && !data)
+    {
+      enqueueSnackbar("Can't load products", { 
+        variant: 'error',
+        persist: true
+      })
+    }
+
   }, [isLoading]);
 
   useEffect(() => {

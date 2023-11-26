@@ -5,6 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setBarLoading } from "../../globalSlice";
 
+import { enqueueSnackbar } from 'notistack'
+
 export default function EditProduct() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -57,10 +59,12 @@ export default function EditProduct() {
 
       navigate("/main");
       dispatch(setBarLoading(false));
+      enqueueSnackbar("Product updated", { variant: 'success' });
     })
     .catch((err) => {
       console.error(err);
       dispatch(setBarLoading(false));
+      enqueueSnackbar("Can't update product", { variant: 'error' });
     });
   };
 
