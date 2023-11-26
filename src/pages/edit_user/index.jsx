@@ -14,8 +14,11 @@ import {
 import LabeledInputfield from "../../components/LabeledInputField";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetUserQuery, useUpdateUserMutation } from "../../services/userManagementService";
+import { useDispatch } from "react-redux";
+import { setBarLoading } from "../../globalSlice";
 
 export default function EditUser() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const {id} = useParams();
   
@@ -52,9 +55,16 @@ export default function EditUser() {
 
     if(user.fullName === "") return;
 
+    dispatch(setBarLoading(true));
+    
     updateUser({id, model: user}).then((rep) =>{
       handleClose();
-    });
+      dispatch(setBarLoading(false));
+    })
+    .catch(err => {
+      dispatch(setBarLoading(false));
+      console.err(err);
+    })
   };
 
   const handleClose = () => {

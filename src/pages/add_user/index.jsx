@@ -8,8 +8,6 @@ import {
   MenuItem,
   Container,
   Button,
-  FormControlLabel,
-  Checkbox,
   InputAdornment,
   IconButton,
 } from "@mui/material";
@@ -17,8 +15,11 @@ import { VisibilityOff, Visibility } from "@mui/icons-material";
 import LabeledInputfield from "../../components/LabeledInputField";
 import { useNavigate } from "react-router-dom";
 import { useAddUserMutation } from "../../services/userManagementService";
+import { useDispatch } from "react-redux";
+import { setBarLoading } from "../../globalSlice";
 
 export default function AddUser() {
+  const dispatch = useDispatch();
   const [addUser] = useAddUserMutation();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -51,8 +52,14 @@ export default function AddUser() {
        || user.password.length <= 3
     ) return;
 
+    dispatch(setBarLoading(true));
     addUser(user).then(resp => {
-        navigate("/main/manage-users");
+      navigate("/main/manage-users");
+      dispatch(setBarLoading(false));
+    })
+    .catch(err => {
+      console.err(err);
+      dispatch(setBarLoading(false));
     });
   };
 

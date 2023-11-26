@@ -8,9 +8,12 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import CustomDialog from "../../components/CustomDialog";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setBarLoading } from "../../globalSlice";
 
 export default function ManageUsers()
 {
+    const dispatch = useDispatch();
     const [deleteUser] = useDeleteUserMutation();
     const [open, setOpen] = useState(false);
     const [id, setId] = useState(null);
@@ -61,11 +64,17 @@ export default function ManageUsers()
     const handleUserDelete = () => {
         if(!id) return;
 
+        dispatch(setBarLoading(true));
         deleteUser({id}).then(resp => {
             refetch();
             setId(null);
             setOpen(false);
+            dispatch(setBarLoading(false));
         })
+        .catch(err => {
+            console.err(err);
+            dispatch(setBarLoading(false));
+        });
     }
 
     const handleSearchChangeEnd = (value) => {

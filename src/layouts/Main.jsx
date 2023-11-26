@@ -1,13 +1,16 @@
-import { useMemo, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./Header";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, LinearProgress } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
+import { barLoadingSelector } from "../globalSlice";
+import { useSelector } from "react-redux";
 
 export default function Main() {
   const navigate = useNavigate();
   const location = useLocation();
   const [pages, setPages] = useState([]);
+  const isBarLoading = useSelector(state => barLoadingSelector(state));
 
   const handleTabClick = (page) => {
     navigate(page.pathName);
@@ -74,6 +77,12 @@ export default function Main() {
 
   return (
     <>
+    {
+      isBarLoading &&
+      <Box sx={{ width: '100%' }}>
+        <LinearProgress />
+      </Box>
+    }
       <Header
         pages={pages}
         currentPathName={removeTrailingSlash(location.pathname)}
