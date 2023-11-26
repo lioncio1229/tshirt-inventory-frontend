@@ -2,8 +2,11 @@ import { useState } from "react";
 import ProductForm from "../../components/ProductForm";
 import { useAddShirtMutation, useUploadImageMutation } from "../../services/tshirtManagementService";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setBarLoading } from "../../globalSlice";
 
 export default function AddProduct() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [addShirt] = useAddShirtMutation();
   const [uploadImage] = useUploadImageMutation();
@@ -36,7 +39,8 @@ export default function AddProduct() {
     delete model.category;
     model.categoryId = category.id;
 
-    addShirt(model).unwrap().then((resp) => {
+    dispatch(setBarLoading(true));
+    addShirt(model).unwrap().then(async (resp) => {
 
       //Upload Image
       const formData = new FormData();
@@ -46,15 +50,13 @@ export default function AddProduct() {
 
       formData.append("image", renamedFile);
 
-      uploadImage(formData).then(resp2 => {
-        navigate("/main");
-      })
-      .catch((err) => {
-        console.err(err);
-      })
-
+      await uploadImage(formData);
+      
+      navigate("/main");
+      dispatch(setBarLoading(false));
     })
     .catch((err) => {
+      dispatch(setBarLoading(false));
       console.error(err);
     });
   };

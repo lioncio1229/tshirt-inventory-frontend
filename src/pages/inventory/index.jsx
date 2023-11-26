@@ -16,7 +16,11 @@ import OtherActions from "./OtherActions";
 
 import QuantityManager from "./QuantityManager";
 
+import { useDispatch } from "react-redux";
+import { setBarLoading } from "../../globalSlice";
+
 export default function Inventory() {
+  const dispatch = useDispatch();
   const [pageIndex, setPageIndex] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [productName, setProductName] = useState("");
@@ -112,13 +116,16 @@ export default function Inventory() {
     if (!id) return;
 
     try {
+      dispatch(setBarLoading(true));
       await deleteImage(id);
       await deleteShirt(id);
+      dispatch(setBarLoading(false));
       refetch();
       setId(null);
       setOpenDeleteDialog(false);
     } catch (err) {
       console.error(err);
+      dispatch(setBarLoading(false));
     }
   };
 
@@ -140,6 +147,10 @@ export default function Inventory() {
   const handleSearchChangeEnd = (value) => {
     setProductName(value);
   };
+
+  useEffect(() => {
+    dispatch(setBarLoading(isLoading));
+  }, [isLoading]);
 
   useEffect(() => {
     setProductName(searchParams.get("search") ?? "");
