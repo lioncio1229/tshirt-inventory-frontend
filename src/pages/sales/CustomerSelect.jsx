@@ -79,7 +79,7 @@ export default function CustomerSelect({ open, onSelect, onClose }) {
                 Select Customer
               </Typography>
             </Stack>
-            <Searchbar sx={{ mb: 2 }} />
+            {/* <Searchbar sx={{ mb: 2 }} /> */}
             <DataTable
               columns={columns}
               rows={data ? data : []}
