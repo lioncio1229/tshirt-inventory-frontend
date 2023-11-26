@@ -125,7 +125,7 @@ export default function Inventory() {
       refetch();
       setId(null);
       setOpenDeleteDialog(false);
-      enqueueSnackbar("Product deleted sucessfuly", { variant: "success" });
+      enqueueSnackbar("Product deleted sucessfully", { variant: "success" });
     } catch (err) {
       console.error(err);
       enqueueSnackbar("Can't delete product", { variant: "error" });
@@ -145,6 +145,11 @@ export default function Inventory() {
       refetch();
       setProduct(null);
       setOpenQuantityEditor(false);
+      enqueueSnackbar("Quantity updated sucessfully", { variant: "success" });
+    })
+    .catch(err => {
+      console.error(err);
+      enqueueSnackbar("Can't update quantity", { variant: "error" });
     })
   }
 
