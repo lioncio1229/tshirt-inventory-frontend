@@ -125,7 +125,7 @@ export default function Inventory() {
       refetch();
       setId(null);
       setOpenDeleteDialog(false);
-      enqueueSnackbar("Product was deleted sucessfuly", { variant: "success" });
+      enqueueSnackbar("Product deleted sucessfuly", { variant: "success" });
     } catch (err) {
       console.error(err);
       enqueueSnackbar("Can't delete product", { variant: "error" });
@@ -157,10 +157,7 @@ export default function Inventory() {
 
     if(!isLoading && !data)
     {
-      enqueueSnackbar("Can't load products", { 
-        variant: 'error',
-        persist: true
-      })
+      enqueueSnackbar("Can't load products", { variant: 'error' })
     }
 
   }, [isLoading]);

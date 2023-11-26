@@ -56,7 +56,7 @@ export default function AddProduct() {
       
       navigate("/main");
       dispatch(setBarLoading(false));
-      enqueueSnackbar("Product was added successfully", { variant: 'success' });
+      enqueueSnackbar("Product added successfully", { variant: 'success' });
     })
     .catch((err) => {
       dispatch(setBarLoading(false));

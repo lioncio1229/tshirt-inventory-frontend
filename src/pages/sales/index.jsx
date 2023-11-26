@@ -29,6 +29,8 @@ import SaleSummary from "./SaleSummary";
 import { useDispatch } from "react-redux";
 import { setBarLoading } from "../../globalSlice";
 
+import { enqueueSnackbar, closeSnackbar } from 'notistack'
+
 export default function Sales() {
   const dispatch = useDispatch();
   const [infoOpen, setInfoOpen] = useState(false);
@@ -148,6 +150,8 @@ export default function Sales() {
     updateStatus(payload).then((resp) => {
       refetch();
       saleSummaryRefetch();
+      const statusName = status.find(item => item.id === statusId)?.label;
+      enqueueSnackbar(`Order successlly moved to ${statusName}`, { variant: "success" });
     });
   };
 
@@ -176,10 +180,12 @@ export default function Sales() {
       saleSummaryRefetch();
       setCreateOrderOpen(false);
       dispatch(setBarLoading(false));
+      enqueueSnackbar("Order created sucessfuly", { variant: "success" });
     })
     .catch(err => {
       console.err(err);
       dispatch(setBarLoading(false));
+      enqueueSnackbar("Can't create order", { variant: "error" });
     })
   };
 
@@ -189,6 +195,12 @@ export default function Sales() {
 
   useEffect(() => {
     dispatch(setBarLoading(isLoadingTshirtOrders || isSaleSummaryLoading));
+
+    if(!isLoadingTshirtOrders && !isSaleSummaryLoading && !data && !saleSummaryData)
+    {
+      enqueueSnackbar("Can't fetch sales", { variant: "error" });
+    }
+
   }, [isLoadingTshirtOrders, isSaleSummaryLoading]);
 
   useEffect(() => {
