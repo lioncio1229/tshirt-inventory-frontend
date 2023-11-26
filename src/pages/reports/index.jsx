@@ -44,7 +44,7 @@ export default function Reports() {
   return (
     <>
       <Stack flexDirection="row" gap={2} mb={2}>
-        {!isFetching ? (
+        {!isFetching && summary ? (
           <Statcard
             label="Total Sales"
             value={summary.totalSales}
@@ -53,7 +53,7 @@ export default function Reports() {
         ) : (
           <Skeleton width={200} height={100} animation="wave" />
         )}
-        {!isFetching ? (
+        {!isFetching && summary ? (
           <Statcard
             label="Revenue"
             value={"P " + summary.revenue}
@@ -70,24 +70,25 @@ export default function Reports() {
             <Typography fontWeight="600" fontSize={20} color="primary">
               Top Products
             </Typography>
-            {isFetchingTopProducts ? (
-              <Skeleton width="100%" height={200} animation="wave" />
-            ) : (
+            {!isFetchingTopProducts && topProducts ? (
               <List sx={{ mt: 1 }}>
-                {topProducts.map((item, i) => (
-                  <ListItem key={i} sx={{ p: 0, pb: 2, color: "grey.800" }}>
-                    <ListItemText primary={`${i + 1}. ${item.tshirt.name}`} />
-                    <Button
-                      sx={{ textTransform: "capitalize", fontSize: 11 }}
-                      variant="outlined"
-                      size="small"
-                      onClick={() => searchProductInInventory(item.tshirt.name)}
-                    >
-                      Search in inventory
-                    </Button>
-                  </ListItem>
-                ))}
-              </List>
+              {topProducts.map((item, i) => (
+                <ListItem key={i} sx={{ p: 0, pb: 2, color: "grey.800" }}>
+                  <ListItemText primary={`${i + 1}. ${item.tshirt.name}`} />
+                  <Button
+                    sx={{ textTransform: "capitalize", fontSize: 11 }}
+                    variant="outlined"
+                    size="small"
+                    onClick={() => searchProductInInventory(item.tshirt.name)}
+                  >
+                    Search in inventory
+                  </Button>
+                </ListItem>
+              ))}
+            </List>
+            ) : (
+              
+              <Skeleton width="100%" height={200} animation="wave" />
             )}
           </Paper>
         </Grid>
