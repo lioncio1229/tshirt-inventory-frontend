@@ -26,20 +26,25 @@ import { useSearchParams } from "react-router-dom";
 
 import SaleSummary from "./SaleSummary";
 
+import { useDispatch } from "react-redux";
+import { setBarLoading } from "../../globalSlice";
+
 export default function Sales() {
+  const dispatch = useDispatch();
   const [infoOpen, setInfoOpen] = useState(false);
   const [customer, setCustomer] = useState({});
   const [currentStatus, setCurrentStatus] = useState(1);
   const [productId, setProductId] = useState("");
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data, refetch, isFetching: isFetchingTshirtOrders } = useGetTshirtOrdersQuery({
+  const { data, refetch, isFetching: isFetchingTshirtOrders, isLoading: isLoadingTshirtOrders } = useGetTshirtOrdersQuery({
     searchByProductId: productId,
     statusId: currentStatus,
   });
   const {
     data: saleSummaryData,
     isFetching: isSaleSummaryFetching,
+    isLoading: isSaleSummaryLoading,
     refetch: saleSummaryRefetch,
   } = useGetSaleSummaryQuery();
   const [getSaleSummary] = useGetSaleSummaryTriggerMutation();
@@ -165,17 +170,26 @@ export default function Sales() {
       },
     };
 
+    dispatch(setBarLoading(true));
     createOrder(payload).then((resp) => {
-      console.log("Order Created!");
       refetch();
       saleSummaryRefetch();
       setCreateOrderOpen(false);
-    });
+      dispatch(setBarLoading(false));
+    })
+    .catch(err => {
+      console.err(err);
+      dispatch(setBarLoading(false));
+    })
   };
 
   const handleSearchChangeEnd = (value) => {
     setProductId(value);
   };
+
+  useEffect(() => {
+    dispatch(setBarLoading(isLoadingTshirtOrders || isSaleSummaryLoading));
+  }, [isLoadingTshirtOrders, isSaleSummaryLoading]);
 
   useEffect(() => {
     const query = {};

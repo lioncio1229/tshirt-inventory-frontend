@@ -82,6 +82,10 @@ export default function ManageUsers()
     };
 
     useEffect(() => {
+        dispatch(setBarLoading(isLoading));
+    }, [isLoading]);
+
+    useEffect(() => {
         setEmail(searchParams.get("searchByEmail") ?? "");
         
         refetch();
