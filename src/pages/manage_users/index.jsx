@@ -11,6 +11,8 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setBarLoading } from "../../globalSlice";
 
+import { enqueueSnackbar } from 'notistack'
+
 export default function ManageUsers()
 {
     const dispatch = useDispatch();
@@ -70,10 +72,12 @@ export default function ManageUsers()
             setId(null);
             setOpen(false);
             dispatch(setBarLoading(false));
+            enqueueSnackbar("User deleted sucessfully", { variant: "success" });
         })
         .catch(err => {
             console.err(err);
             dispatch(setBarLoading(false));
+            enqueueSnackbar("Can't delete user", { variant: "error" });
         });
     }
 

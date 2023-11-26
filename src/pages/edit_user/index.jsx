@@ -17,6 +17,8 @@ import { useGetUserQuery, useUpdateUserMutation } from "../../services/userManag
 import { useDispatch } from "react-redux";
 import { setBarLoading } from "../../globalSlice";
 
+import { enqueueSnackbar } from 'notistack'
+
 export default function EditUser() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -60,10 +62,12 @@ export default function EditUser() {
     updateUser({id, model: user}).then((rep) =>{
       handleClose();
       dispatch(setBarLoading(false));
+      enqueueSnackbar("User updated sucessfully", { variant: "success" });
     })
     .catch(err => {
       dispatch(setBarLoading(false));
       console.err(err);
+      enqueueSnackbar("Can't update user", { variant: "error" });
     })
   };
 

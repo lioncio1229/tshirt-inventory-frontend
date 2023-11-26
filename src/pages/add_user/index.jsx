@@ -18,6 +18,8 @@ import { useAddUserMutation } from "../../services/userManagementService";
 import { useDispatch } from "react-redux";
 import { setBarLoading } from "../../globalSlice";
 
+import { enqueueSnackbar } from 'notistack'
+
 export default function AddUser() {
   const dispatch = useDispatch();
   const [addUser] = useAddUserMutation();
@@ -56,10 +58,12 @@ export default function AddUser() {
     addUser(user).then(resp => {
       navigate("/main/manage-users");
       dispatch(setBarLoading(false));
+      enqueueSnackbar("User added sucessfully", { variant: "success" });
     })
     .catch(err => {
       console.err(err);
       dispatch(setBarLoading(false));
+      enqueueSnackbar("Can't add user", { variant: "error" });
     });
   };
 
