@@ -15,7 +15,8 @@ import { useEffect, useState } from "react";
 import Searchbar from "../../components/Searchbar";
 
 export default function ProductSelect({ open, onSelect, onClose }) {
-  const { data, refetch } = useGetShirtsWithoutPaginationQuery();
+  const [productName, setProductName] = useState("");
+  const { data, refetch } = useGetShirtsWithoutPaginationQuery(productName);
   const [selectedId, setSelectedId] = useState(null);
 
   const columns = [
@@ -56,9 +57,19 @@ export default function ProductSelect({ open, onSelect, onClose }) {
     onClose();
   };
 
+  const handleSearchChange = (value) => {
+    setProductName(value);
+  }
+
   useEffect(() => {
     if (!open) return;
+
     refetch();
+
+    return () => {
+      setProductName("");
+    }
+
   }, [open]);
 
   return (
@@ -84,7 +95,13 @@ export default function ProductSelect({ open, onSelect, onClose }) {
                 Product Select
               </Typography>
             </Stack>
-            <Searchbar sx={{ mb: 2 }} />
+            <Searchbar
+              sx={{ mb: 2 }}
+              value={productName}
+              onChangeEnd={handleSearchChange}
+              searchAfter={500}
+              placeholder="Search by name"
+            />
             <DataTable
               columns={columns}
               rows={data ? data : []}

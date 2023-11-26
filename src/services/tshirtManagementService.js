@@ -8,7 +8,7 @@ const tshirtManagementApi = emptySplitApi.injectEndpoints({
         `api/v1/tshirt/q?skipRows=${model.pageIndex}&numberOfItems=${model.rowsPerPage}&searchByName=${model.searchByName}`,
     }),
     getShirtsWithoutPagination: builder.query({
-      query: () => `api/v1/tshirt`,
+      query: (searchByName) => searchByName ? `api/v1/tshirt?searchByName=${searchByName}` : `api/v1/tshirt`,
     }),
     getShirt: builder.query({
       query: (model) => `api/v1/tshirt/${model.id}`,
