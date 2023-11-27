@@ -36,26 +36,50 @@ export default function EditProduct() {
     setValues({...values, category: value});
   }
 
+  const modelValid = () => {
+    const { name, quantityInStock, unitPrice, category } = values;
+    let error = "";
+
+    if (name.trim() === "") {
+      error = "Require product name";
+    } else if (quantityInStock < 0) {
+      error = "Quantity in stock should not be negative";
+    } else if (unitPrice < 0) {
+      error = "Price should not be negative";
+    }
+    else if(!category) {
+      error = "Please select a category"
+    }
+
+    if (error === "") return true;
+
+    enqueueSnackbar(error);
+    return false;
+  };
+
   const handleSubmit = () => {
-    const category = values.category;
-    if(category == null) return;
+    if(!modelValid()) return;
+    const categoryId = values.category.id;
 
     const model = {...values};
     delete model.category;
-    model.categoryId = category.id;
+    model.categoryId = categoryId;
 
     dispatch(setBarLoading(true));
     editShirt({id, model}).then(async (resp) => {
       
-      //Upload Image
-      const formData = new FormData();
-      const renamedFile = new File([file], id, {
-        type: file.type,
-      });
-      
-      formData.append("image", renamedFile);
-      
-      await uploadImage(formData);
+      if(file)
+      {
+        //Upload Image
+        const formData = new FormData();
+        const renamedFile = new File([file], id, {
+          type: file.type,
+        });
+        
+        formData.append("image", renamedFile);
+        
+        await uploadImage(formData);
+      }
 
       navigate("/main");
       dispatch(setBarLoading(false));
