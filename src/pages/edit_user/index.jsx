@@ -13,18 +13,21 @@ import {
 } from "@mui/material";
 import LabeledInputfield from "../../components/LabeledInputField";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetUserQuery, useUpdateUserMutation } from "../../services/userManagementService";
+import {
+  useGetUserQuery,
+  useUpdateUserMutation,
+} from "../../services/userManagementService";
 import { useDispatch } from "react-redux";
 import { setBarLoading } from "../../globalSlice";
 
-import { enqueueSnackbar } from 'notistack'
+import { enqueueSnackbar } from "notistack";
 
 export default function EditUser() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {id} = useParams();
-  
-  const {data, refetch} = useGetUserQuery({id});
+  const { id } = useParams();
+
+  const { data, refetch } = useGetUserQuery({ id });
   const [updateUser] = useUpdateUserMutation();
 
   const [email, setEmail] = useState("");
@@ -47,28 +50,42 @@ export default function EditUser() {
 
   const handleCheckboxChange = (e) => {
     setUser({ ...user, [e.target.id]: e.target.checked });
-  }
+  };
 
   const handleRoleChange = (e) => {
     setUser({ ...user, roleId: e.target.value });
   };
 
-  const handleSubmit = () => {
+  const modelValid = () => {
+    const { fullName } = user;
+    let error = "";
 
-    if(user.fullName === "") return;
+    if (fullName.trim() === "") {
+      error = "Require Name"
+    }
+
+    if(error === "") return true;
+    
+    enqueueSnackbar(error);
+    return false;
+  };
+
+  const handleSubmit = () => {
+    if (!modelValid()) return;
 
     dispatch(setBarLoading(true));
-    
-    updateUser({id, model: user}).then((rep) =>{
-      handleClose();
-      dispatch(setBarLoading(false));
-      enqueueSnackbar("User updated sucessfully", { variant: "success" });
-    })
-    .catch(err => {
-      dispatch(setBarLoading(false));
-      console.err(err);
-      enqueueSnackbar("Can't update user", { variant: "error" });
-    })
+
+    updateUser({ id, model: user })
+      .then((rep) => {
+        handleClose();
+        dispatch(setBarLoading(false));
+        enqueueSnackbar("User updated sucessfully", { variant: "success" });
+      })
+      .catch((err) => {
+        dispatch(setBarLoading(false));
+        console.err(err);
+        enqueueSnackbar("Can't update user", { variant: "error" });
+      });
   };
 
   const handleClose = () => {
@@ -76,7 +93,7 @@ export default function EditUser() {
   };
 
   useEffect(() => {
-    if(!data) return;
+    if (!data) return;
 
     setUser({
       fullName: data.fullName,
@@ -97,11 +114,7 @@ export default function EditUser() {
           Edit user
         </Typography>
 
-        <LabeledInputfield
-          label="Email"
-          value={email}
-          disabled
-        />
+        <LabeledInputfield label="Email" value={email} disabled />
         <LabeledInputfield
           id="fullName"
           label="Fullname"
@@ -127,7 +140,13 @@ export default function EditUser() {
         </FormControl>
 
         <FormControlLabel
-          control={<Checkbox id="isActive" checked={user.isActive} onChange={handleCheckboxChange}/>}
+          control={
+            <Checkbox
+              id="isActive"
+              checked={user.isActive}
+              onChange={handleCheckboxChange}
+            />
+          }
           label="Is active"
         />
 

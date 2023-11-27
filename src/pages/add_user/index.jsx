@@ -18,7 +18,7 @@ import { useAddUserMutation } from "../../services/userManagementService";
 import { useDispatch } from "react-redux";
 import { setBarLoading } from "../../globalSlice";
 
-import { enqueueSnackbar } from 'notistack'
+import { enqueueSnackbar } from "notistack";
 
 export default function AddUser() {
   const dispatch = useDispatch();
@@ -47,24 +47,41 @@ export default function AddUser() {
     setUser({ ...user, roleId: e.target.value });
   };
 
-  const handleSubmit = () => {
+  const modelValid = () => {
+    const { email, fullName, password } = user;
+    let error = "";
 
-    if(user.email === ""
-       || user.fullName === ""
-       || user.password.length <= 3
-    ) return;
+    if (email.trim() === "") {
+      error = "Please add email";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      error = "Invalid email";
+    } else if (fullName.trim() === "") {
+      error = "Require Name"
+    } else if (password.trim() === "") {
+      error = "Require password"
+    }
+
+    if(error === "") return true;
+    
+    enqueueSnackbar(error);
+    return false;
+  };
+
+  const handleSubmit = () => {
+    if(!modelValid()) return;
 
     dispatch(setBarLoading(true));
-    addUser(user).then(resp => {
-      navigate("/main/manage-users");
-      dispatch(setBarLoading(false));
-      enqueueSnackbar("User added sucessfully", { variant: "success" });
-    })
-    .catch(err => {
-      console.err(err);
-      dispatch(setBarLoading(false));
-      enqueueSnackbar("Can't add user", { variant: "error" });
-    });
+    addUser(user)
+      .then((resp) => {
+        navigate("/main/manage-users");
+        dispatch(setBarLoading(false));
+        enqueueSnackbar("User added sucessfully", { variant: "success" });
+      })
+      .catch((err) => {
+        console.err(err);
+        dispatch(setBarLoading(false));
+        enqueueSnackbar("Can't add user", { variant: "error" });
+      });
   };
 
   const handleClose = () => {
@@ -72,8 +89,8 @@ export default function AddUser() {
   };
 
   const handleClickShowPassword = () => {
-    setShowPassword(show => !show);
-  }
+    setShowPassword((show) => !show);
+  };
 
   return (
     <Container maxWidth="xs">
@@ -102,14 +119,14 @@ export default function AddUser() {
           value={user.password}
           endAdornment={
             <InputAdornment position="end">
-            <IconButton
-              aria-label="toggle password visibility"
-              onClick={handleClickShowPassword}
-              edge="end"
-            >
-              {showPassword ? <VisibilityOff /> : <Visibility />}
-            </IconButton>
-          </InputAdornment>
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
           }
         />
 
