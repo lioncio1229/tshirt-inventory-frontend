@@ -228,12 +228,12 @@ export default function ProductForm({
         getOptionLabel={(option) => option.name}
         disablePortal
         options={[
-          { id: 1, name: "Any" },
-          { id: 2, name: "Men" },
-          { id: 3, name: "Women" },
-          { id: 4, name: "Baby" },
-          { id: 5, name: "Teen" },
-          { id: 6, name: "Christmas" },
+          { id: 9, name: "Any" },
+          { id: 10, name: "Men" },
+          { id: 11, name: "Women" },
+          { id: 12, name: "Baby" },
+          { id: 13, name: "Teen" },
+          { id: 14, name: "Christmas" },
         ]}
         fullWidth
         renderInput={(params) => (

@@ -23,7 +23,7 @@ export default function AddProduct() {
     color: "",
     quantityInStock: 0,
     unitPrice: 0,
-    category: { id: 1, name: "Any" },
+    category: { id: 9, name: "Any" },
   });
 
   const [file, setFile] = useState(null);
