@@ -1,15 +1,5 @@
 import { useEffect } from "react";
-import {
-  Stack,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-  Typography,
-  Button,
-  Skeleton,
-} from "@mui/material";
+import { Stack, Typography, Skeleton, Box, Button } from "@mui/material";
 import Statcard from "../../components/StatCard";
 import AnalyticsChart from "./AnalyticsChart";
 import {
@@ -20,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
 import { setBarLoading } from "../../globalSlice";
+import DataTable from "../../components/DataTable";
 
 export default function Reports() {
   const dispatch = useDispatch();
@@ -39,9 +30,63 @@ export default function Reports() {
 
   const navigate = useNavigate();
 
+  const columns = [
+    {
+      id: "tshirt",
+      label: "Name",
+      formatter: (params) => {
+        return params.tshirt.name;
+      },
+    },
+    {
+      id: "tshirt",
+      label: "Size",
+      formatter: (params) => {
+        return params.tshirt.size;
+      },
+    },
+    {
+      id: "tshirt",
+      label: "Color",
+      formatter: (params) => {
+        return params.tshirt.color;
+      },
+    },
+    {
+      id: "tshirt",
+      label: "Category",
+      formatter: (params) => {
+        return params.tshirt.unitPrice;
+      },
+    },
+    {
+      id: "tshirt",
+      label: "Category",
+      formatter: (params) => {
+        return params.tshirt.category.name;
+      },
+    },
+    {
+      id: "tshirt",
+      label: "Action",
+      formatter: (params) => {
+        return (
+          <Button
+            sx={{ textTransform: "capitalize", fontSize: 11 }}
+            variant="outlined"
+            size="small"
+            onClick={() => searchProductInInventory(params.tshirt.name)}
+          >
+            Search in inventory
+          </Button>
+        );
+      },
+    },
+  ];
+
   const searchProductInInventory = (name) => {
     navigate(`/main?search=${name}`);
-  }
+  };
 
   useEffect(() => {
     dispatch(setBarLoading(isLoading || isLoadingTopProducts));
@@ -75,38 +120,42 @@ export default function Reports() {
         )}
         {/* <Statcard label="Total Products" value={10} sx={{bgcolor: "secondary.dark"}}/> */}
       </Stack>
-      <Grid container spacing={2} mb={2}>
-        <Grid item xs={3}>
-          <Paper sx={{ p: 2 }}>
-            <Typography fontWeight="600" fontSize={20} color="primary">
-              Top Products
-            </Typography>
-            {!isFetchingTopProducts && topProducts ? (
-              <List sx={{ mt: 1 }}>
-              {topProducts.map((item, i) => (
-                <ListItem key={i} sx={{ p: 0, pb: 2, color: "grey.800" }}>
-                  <ListItemText primary={`${i + 1}. ${item.tshirt.name}`} />
-                  <Button
-                    sx={{ textTransform: "capitalize", fontSize: 11 }}
-                    variant="outlined"
-                    size="small"
-                    onClick={() => searchProductInInventory(item.tshirt.name)}
-                  >
-                    Search in inventory
-                  </Button>
-                </ListItem>
-              ))}
-            </List>
-            ) : (
-              
-              <Skeleton width="100%" height={200} animation="wave" />
-            )}
-          </Paper>
-        </Grid>
-        <Grid item xs={9}>
-          <AnalyticsChart />
-        </Grid>
-      </Grid>
+      <Box>
+        <Typography
+          fontWeight="600"
+          fontSize={20}
+          color="primary"
+          sx={{ mb: 2 }}
+        >
+          Top Products
+        </Typography>
+        {/* {!isFetchingTopProducts && topProducts ? (
+          <List sx={{ mt: 1 }}>
+          {topProducts.map((item, i) => (
+            <ListItem key={i} sx={{ p: 0, pb: 2, color: "grey.800" }}>
+              <ListItemText primary={`${i + 1}. ${item.tshirt.name}`} />
+              <Button
+                sx={{ textTransform: "capitalize", fontSize: 11 }}
+                variant="outlined"
+                size="small"
+                onClick={() => searchProductInInventory(item.tshirt.name)}
+              >
+                Search in inventory
+              </Button>
+            </ListItem>
+          ))}
+        </List>
+        ) : (
+          
+          <Skeleton width="100%" height={200} animation="wave" />
+        )} */}
+
+        {!isFetching && topProducts ? (
+          <DataTable columns={columns} rows={topProducts} />
+        ) : (
+          <Skeleton variant="rectangular" animation="wave" height={300} />
+        )}
+      </Box>
     </>
   );
 }
