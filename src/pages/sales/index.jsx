@@ -176,10 +176,17 @@ export default function Sales() {
 
     dispatch(setBarLoading(true));
     createOrder(payload).then((resp) => {
-      refetch();
-      saleSummaryRefetch();
       setCreateOrderOpen(false);
       dispatch(setBarLoading(false));
+      
+      if(resp.error)
+      {
+        enqueueSnackbar(resp.error.data, { variant: "error" });
+        return;
+      }
+
+      refetch();
+      saleSummaryRefetch();
       enqueueSnackbar("Order created sucessfuly", { variant: "success" });
     })
     .catch(err => {
