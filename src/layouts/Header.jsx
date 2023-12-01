@@ -81,7 +81,7 @@ export default function Header({ currentPathName, pages = [], onTabClick }) {
               textDecoration: "none",
             }}
           >
-            Tshirt Inventory
+            Clothing Inventory
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -137,7 +137,7 @@ export default function Header({ currentPathName, pages = [], onTabClick }) {
               textDecoration: "none",
             }}
           >
-            T-shirt Inventory
+            Clothing Inventory
           </Typography>
           <Box
             sx={{
